@@ -1,0 +1,7 @@
+res://Scenes/CompositorEffectHangar.tscn
+res://Materials/Sky/Sky.tres
+res://Materials/Effects/LensFlare1.tres
+res://Shaders/postprocess.gdshader
+res://PostProcessResources/bastille_1x8.tres
+res://Scripts/ComputeShaders/dither_ce.gd
+res://PostProcessResources/sirens_at_night_1x7.tres

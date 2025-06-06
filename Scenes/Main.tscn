@@ -1,0 +1,42 @@
+[gd_scene load_steps=10 format=3 uid="uid://p06gf2xc2cc"]
+
+[ext_resource type="PackedScene" uid="uid://b11dhc2mlx4d4" path="res://Scenes/Hangar.tscn" id="1_q2wk0"]
+[ext_resource type="PackedScene" uid="uid://bx4608scjynpg" path="res://Scenes/Outside.tscn" id="2_ynrhl"]
+[ext_resource type="Environment" uid="uid://3mjh4eonnhh3" path="res://Scenes/Environment/environment.tres" id="3_cdcts"]
+[ext_resource type="Script" path="res://Scripts/ComputeShaders/bokeh_ce.gd" id="4_w1cpc"]
+[ext_resource type="PackedScene" uid="uid://bplxirpbbh5ck" path="res://Scenes/Controllers/FPSCharacter.tscn" id="5_6wse5"]
+[ext_resource type="PackedScene" uid="uid://b1wrv31em1a0m" path="res://Scenes/MenuLayer.tscn" id="5_nnn85"]
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_faxus"]
+resource_local_to_scene = false
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("4_w1cpc")
+
+[sub_resource type="Compositor" id="Compositor_djp7d"]
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_faxus")])
+
+[sub_resource type="SphereMesh" id="SphereMesh_1vowp"]
+
+[node name="Main" type="Node3D"]
+
+[node name="Hangar" parent="." instance=ExtResource("1_q2wk0")]
+
+[node name="Outside" parent="." instance=ExtResource("2_ynrhl")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("3_cdcts")
+compositor = SubResource("Compositor_djp7d")
+
+[node name="MenuLayer" parent="." instance=ExtResource("5_nnn85")]
+
+[node name="FPSCharacter" parent="." instance=ExtResource("5_6wse5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8.39674)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 21.9317, 0)
+mesh = SubResource("SphereMesh_1vowp")
+skeleton = NodePath("../WorldEnvironment")
