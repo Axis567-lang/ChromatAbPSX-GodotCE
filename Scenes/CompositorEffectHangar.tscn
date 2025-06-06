@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://df3v8ucyursk8" path="res://Scenes/Environment/world_environment.tscn" id="3_g07g3"]
 [ext_resource type="PackedScene" uid="uid://ccjmuj0wg0hgi" path="res://Scenes/Environment/space_craft_hangar.tscn" id="4_b2mim"]
 [ext_resource type="Texture2D" uid="uid://bbhw8sgom38sw" path="res://PostProcessResources/dither_bayer_4x4.png" id="4_oiqe0"]
-[ext_resource type="Texture2D" uid="uid://scvj7nlmgerg" path="res://PostProcessResources/sirens_at_night_1x7.tres" id="5_gb7tp"]
+[ext_resource type="Texture2D" uid="uid://djin13bdw7wcm" path="res://PostProcessResources/bastille_1x8.tres" id="5_kcves"]
 [ext_resource type="PackedScene" uid="uid://vg8yuihj5huq" path="res://Models/Objects/ivy_tall.tscn" id="5_rjuy3"]
 [ext_resource type="Script" path="res://Scripts/ComputeShaders/dither_ce.gd" id="6_koi36"]
 [ext_resource type="PackedScene" uid="uid://bcsucihl18y5w" path="res://Models/Objects/ivy_wide.tscn" id="6_t7c5u"]
@@ -22,7 +22,7 @@
 [ext_resource type="PackedScene" uid="uid://blkf2n5onfgjs" path="res://Models/Objects/hammock.tscn" id="17_554jf"]
 [ext_resource type="PackedScene" uid="uid://cvi0md4h0tigc" path="res://Scenes/Environment/lights.tscn" id="18_8hkqx"]
 
-[sub_resource type="CompositorEffect" id="CompositorEffect_sri12"]
+[sub_resource type="CompositorEffect" id="CompositorEffect_uyoa4"]
 resource_local_to_scene = false
 resource_name = ""
 enabled = true
@@ -31,20 +31,20 @@ needs_motion_vectors = false
 needs_normal_roughness = false
 script = ExtResource("6_koi36")
 chromab_polarity = -0.6
-noise_frequency = 1.2
-noise_tiling = -0.085
+noise_frequency = 1.0
+noise_tiling = 0.25
 noise_intensity = 0.025
 vignette_intensity = 0.1
 psx_toggle = true
-dither_scale = 1.225
-gradient_flip = true
-gradient_intensity = -0.01
+dither_scale = 1.0
+gradient_flip = false
+gradient_intensity = 0.15
 vignette_rgba = Vector4(0, 0, 0, 1)
-gradient = ExtResource("5_gb7tp")
+gradient = ExtResource("5_kcves")
 dither = ExtResource("4_oiqe0")
 
 [sub_resource type="Compositor" id="Compositor_o6lsx"]
-compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_sri12")])
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_uyoa4")])
 
 [node name="Hangar" type="Node3D"]
 
