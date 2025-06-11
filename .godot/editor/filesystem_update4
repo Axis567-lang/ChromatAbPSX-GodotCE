@@ -3,3 +3,4 @@ res://Materials/Sky/Sky.tres
 res://Materials/Effects/LensFlare1.tres
 res://Shaders/postprocess.gdshader
 res://PostProcessResources/bastille_1x8.tres
+res://Scenes/PostProcessHangar.tscn

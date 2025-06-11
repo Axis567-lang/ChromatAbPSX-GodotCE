@@ -106,7 +106,6 @@ vec3 chrom_ab( sampler2D screen, vec2 uv ) {
 	return col;
 }
 
-
 vec3 psx_tex(vec3 col, sampler2D tex, vec2 uv) {
 	vec2 dither_size = vec2(textureSize(dither, 0)); // for GLES2: substitute for the dimensions of the dithering matrix
 	vec2 buf_size = vec2(textureSize(tex, 0)) * pms.dither_scale;
@@ -126,26 +125,38 @@ vec3 hard_light( vec3 base, vec3 blend ) {
 	return mix( 2.0 * base * blend, 1.0 - 2.0 * ( 1.0 - base ) * ( 1.0 - blend ), limit );
 }
 
+/*
+vec2 uv = UV;
+vec2 sps = SCREEN_PIXEL_SIZE;
+vec2 res = (1.0 / sps);
+vec2 screen = res * uv;
+
+ivec2 pixel = ivec2(gl_GlobalInvocationID.xy);
+vec2 res = pms.screen_size;
+vec2 sps = 1.0 / res;
+vec2 uv = vec2(pixel) * sps;
+vec2 screen = vec2(gid); // lo mismo que res * uv
+*/
 void main()
 {
-    ivec2 pixel = ivec2(gl_GlobalInvocationID.xy);				// uv
-    vec2 size_res = pms.screen_size;							// res
+	ivec2 pixel = ivec2(gl_GlobalInvocationID.xy);			// screen
+    vec2 res = pms.screen_size;								// res
     // calculate uv
-    vec2 uv_screen = pixel / size_res;						// screen
+    vec2 uv = pixel / res;									// uv								
 
-    if(pixel.x >= size_res.x || pixel.y >= size_res.y) return;
+    if(pixel.x >= res.x || pixel.y >= res.y) return;
 
     vec4 color = imageLoad(screen_tex, pixel);				// col
 
 	//	Parameters
-	float c = 1.0 + pms.chromab_polarity - pow(radial_mask(uv_screen), pms.vignette_intensity);
-	float v = 1.0 - pow(radial_mask(uv_screen), pms.vignette_intensity);
-	float n = noise_simplex(uv_screen * pms.noise_tiling);
+	float c = 1.0 + pms.chromab_polarity - pow(radial_mask(uv), pms.vignette_intensity);
+	float v = 1.0 - pow(radial_mask(uv), pms.vignette_intensity);
+	float n = noise_simplex(vec2(pixel) * pms.noise_tiling);
 
 	vec3 tex_noise = vec3(n);
 
-	vec3 col_chr = mix(color.rgb, chrom_ab(screen_sample, uv_screen), c);
-	vec3 col_psx = mix(col_chr, psx_tex(col_chr, screen_sample, uv_screen), pms.psx_toggle);
+	vec3 col_chr = mix(color.rgb, chrom_ab(screen_sample, uv), c);
+	vec3 col_psx = mix(col_chr, psx_tex(col_chr, screen_sample, uv), pms.psx_toggle);
 	vec3 col_pal = mix(col_psx, palette(col_psx), pms.gradient_intensity);
 	vec3 col_nos = mix(col_pal, hard_light(col_pal, tex_noise), pms.noise_intensity);
 	vec3 col_vig = mix(col_nos, vgt.vignette_rgba.rgb * v, vgt.vignette_rgba.a * v);
@@ -178,6 +189,34 @@ void main()
 
 	// imageStore(screen_tex, pixel, color);
 	imageStore(screen_tex, pixel, vec4(col_vig, 1.0));
-
-
 }
+/*
+void main()
+{
+    ivec2 pixel = ivec2(gl_GlobalInvocationID.xy);				// uv
+    vec2 size_res = pms.screen_size;							// res
+    // calculate uv
+    vec2 uv = pixel * size_res;									// screen
+
+    if(pixel.x >= size_res.x || pixel.y >= size_res.y) return;
+
+    vec4 color = imageLoad(screen_tex, pixel);					// col
+
+	//	Parameters
+	float c = 1.0 + pms.chromab_polarity - pow(radial_mask(uv), pms.vignette_intensity);
+	float v = 1.0 - pow(radial_mask(uv), pms.vignette_intensity);
+	float n = noise_simplex(uv * pms.noise_tiling);
+
+	vec3 tex_noise = vec3(n);
+
+	vec3 col_chr = mix(color.rgb, chrom_ab(screen_sample, uv), c);
+	vec3 col_psx = mix(col_chr, psx_tex(col_chr, screen_sample, uv), pms.psx_toggle);
+	vec3 col_pal = mix(col_psx, palette(col_psx), pms.gradient_intensity);
+	vec3 col_nos = mix(col_pal, hard_light(col_pal, tex_noise), pms.noise_intensity);
+	vec3 col_vig = mix(col_nos, vgt.vignette_rgba.rgb * v, vgt.vignette_rgba.a * v);
+
+	// imageStore(screen_tex, pixel, color);
+	imageStore(screen_tex, pixel, vec4(col_vig, 1.0));
+
+
+}*/

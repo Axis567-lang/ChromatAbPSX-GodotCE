@@ -22,7 +22,7 @@
 [ext_resource type="PackedScene" uid="uid://blkf2n5onfgjs" path="res://Models/Objects/hammock.tscn" id="17_554jf"]
 [ext_resource type="PackedScene" uid="uid://cvi0md4h0tigc" path="res://Scenes/Environment/lights.tscn" id="18_8hkqx"]
 
-[sub_resource type="CompositorEffect" id="CompositorEffect_uyoa4"]
+[sub_resource type="CompositorEffect" id="CompositorEffect_2lt0h"]
 resource_local_to_scene = false
 resource_name = ""
 enabled = true
@@ -44,7 +44,7 @@ gradient = ExtResource("5_kcves")
 dither = ExtResource("4_oiqe0")
 
 [sub_resource type="Compositor" id="Compositor_o6lsx"]
-compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_uyoa4")])
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_2lt0h")])
 
 [node name="Hangar" type="Node3D"]
 
