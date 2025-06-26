@@ -26,7 +26,7 @@
 [ext_resource type="PackedScene" uid="uid://blkf2n5onfgjs" path="res://Models/Objects/hammock.tscn" id="17_554jf"]
 [ext_resource type="PackedScene" uid="uid://cvi0md4h0tigc" path="res://Scenes/Environment/lights.tscn" id="18_8hkqx"]
 
-[sub_resource type="CompositorEffect" id="CompositorEffect_wr3ed"]
+[sub_resource type="CompositorEffect" id="CompositorEffect_220oi"]
 resource_local_to_scene = false
 resource_name = ""
 enabled = true
@@ -37,7 +37,7 @@ script = ExtResource("4_vc43m")
 chromab_polarity = -0.6
 vignette_intensity = 0.1
 
-[sub_resource type="CompositorEffect" id="CompositorEffect_3uwj1"]
+[sub_resource type="CompositorEffect" id="CompositorEffect_xtnx4"]
 resource_local_to_scene = false
 resource_name = ""
 enabled = true
@@ -50,7 +50,7 @@ dither_scale = 1.0
 gradient = ExtResource("6_mcig4")
 dither = ExtResource("5_de0dt")
 
-[sub_resource type="CompositorEffect" id="CompositorEffect_ky3mw"]
+[sub_resource type="CompositorEffect" id="CompositorEffect_kb5qp"]
 resource_local_to_scene = false
 resource_name = ""
 enabled = true
@@ -62,7 +62,7 @@ gradient_flip = false
 gradient_intensity = 0.15
 gradient = ExtResource("6_mcig4")
 
-[sub_resource type="CompositorEffect" id="CompositorEffect_d5q1v"]
+[sub_resource type="CompositorEffect" id="CompositorEffect_pgfm5"]
 resource_local_to_scene = false
 resource_name = ""
 enabled = true
@@ -74,7 +74,7 @@ noise_frequency = 1.0
 noise_tiling = 0.25
 noise_intensity = 0.025
 
-[sub_resource type="CompositorEffect" id="CompositorEffect_ldlxw"]
+[sub_resource type="CompositorEffect" id="CompositorEffect_1xvr4"]
 resource_local_to_scene = false
 resource_name = ""
 enabled = true
@@ -86,7 +86,7 @@ vignette_intensity = 0.1
 vignette_rgba = Vector4(0, 0, 0, 1)
 
 [sub_resource type="Compositor" id="Compositor_o6lsx"]
-compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_wr3ed"), SubResource("CompositorEffect_3uwj1"), SubResource("CompositorEffect_ky3mw"), SubResource("CompositorEffect_d5q1v"), SubResource("CompositorEffect_ldlxw")])
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_220oi"), SubResource("CompositorEffect_xtnx4"), SubResource("CompositorEffect_kb5qp"), SubResource("CompositorEffect_pgfm5"), SubResource("CompositorEffect_1xvr4")])
 
 [node name="Hangar" type="Node3D"]
 

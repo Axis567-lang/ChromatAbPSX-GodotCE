@@ -39,7 +39,13 @@ void main()
 
     vec4 color = imageLoad(screen_tex, pixel);				// col
 
-	vec3 col_psx = mix(color.rgb, psx_tex(color.rgb, screen_sample, uv), pms.psx_toggle);
+	// SOL 1
+	vec2 jitter = vec2(fract(sin(dot(pixel.xy , vec2(12.9898,78.233))) * 43758.5453));
+	vec2 uv_jittered = uv + (jitter - 0.5) / pms.screen_size;
+
+	// vec4 color = texture(screen_sample, uv_jittered);
+
+	vec3 col_psx = mix(color.rgb, psx_tex(color.rgb, screen_sample, uv_jittered), pms.psx_toggle);
 
 	imageStore(screen_tex, pixel, vec4(col_psx, 1.0));
 }
