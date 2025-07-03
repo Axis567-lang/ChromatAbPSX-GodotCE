@@ -1,6 +1,8 @@
 @tool
 class_name VignetteCe extends CompositorEffect
 
+const GLSL_FILE : RDShaderFile = preload("res://Scripts/GLSL/vignette.glsl")
+
 # ------------- Custom Variables
 @export_group("Vignette Properties")
 @export var vignette_intensity : float = 0.1
@@ -84,7 +86,6 @@ func init_compute_shader() -> void:
 	rd = RenderingServer.get_rendering_device()
 	if not rd: return
 	
-	var glsl_file : RDShaderFile = load("res://Scripts/GLSL/vignette.glsl")
-	shader = rd.shader_create_from_spirv(glsl_file.get_spirv())
+	shader = rd.shader_create_from_spirv(GLSL_FILE.get_spirv())
 	pipeline = rd.compute_pipeline_create(shader)
 	

@@ -2,4 +2,6 @@ res://Scenes/CompositorEffectHangar.tscn
 res://Materials/Sky/Sky.tres
 res://Materials/Effects/LensFlare1.tres
 res://Shaders/postprocess.gdshader
-res://PostProcessResources/bastille_1x8.tres
+res://Palettes/bastille_1x8.tres
+res://Materials/ShaderMaterials/PSXDither.tres
+res://Scripts/ComputeShaders/chromatic_aberration_ce.gd

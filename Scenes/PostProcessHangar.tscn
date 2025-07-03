@@ -1,10 +1,8 @@
-[gd_scene load_steps=23 format=3 uid="uid://dl7mhht1ki777"]
+[gd_scene load_steps=20 format=3 uid="uid://dl7mhht1ki777"]
 
-[ext_resource type="Shader" path="res://Shaders/postprocess.gdshader" id="1_adtjn"]
+[ext_resource type="Material" uid="uid://cbpar14pwmxn7" path="res://Materials/ShaderMaterials/PSXDither.tres" id="1_2km80"]
 [ext_resource type="PackedScene" uid="uid://cmsqjjs56ulbs" path="res://Scenes/Controllers/FreeLookCamera.tscn" id="1_erf21"]
-[ext_resource type="Texture2D" uid="uid://bbhw8sgom38sw" path="res://PostProcessResources/dither_bayer_4x4.png" id="2_3l5q6"]
 [ext_resource type="LightmapGIData" uid="uid://d1g71c1xqsdyp" path="res://Scenes/Hangar.lmbake" id="2_o4w1b"]
-[ext_resource type="Texture2D" uid="uid://djin13bdw7wcm" path="res://PostProcessResources/bastille_1x8.tres" id="3_6lqww"]
 [ext_resource type="PackedScene" uid="uid://df3v8ucyursk8" path="res://Scenes/Environment/world_environment.tscn" id="3_exo1y"]
 [ext_resource type="PackedScene" uid="uid://ccjmuj0wg0hgi" path="res://Scenes/Environment/space_craft_hangar.tscn" id="4_1g5ub"]
 [ext_resource type="PackedScene" uid="uid://vg8yuihj5huq" path="res://Models/Objects/ivy_tall.tscn" id="5_wwnji"]
@@ -22,25 +20,10 @@
 [ext_resource type="PackedScene" uid="uid://blkf2n5onfgjs" path="res://Models/Objects/hammock.tscn" id="17_870ir"]
 [ext_resource type="PackedScene" uid="uid://cvi0md4h0tigc" path="res://Scenes/Environment/lights.tscn" id="18_mo0nm"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_g5uw4"]
-shader = ExtResource("1_adtjn")
-shader_parameter/chromab_polarity = -0.6
-shader_parameter/noise_frequency = 1.0
-shader_parameter/noise_tiling = 0.25
-shader_parameter/noise_intensity = 0.025
-shader_parameter/vignette_intensity = 0.1
-shader_parameter/vignette_rgba = Color(0.117647, 0.0980392, 0.137255, 0.686275)
-shader_parameter/psx_toggle = true
-shader_parameter/dither_scale = 1.0
-shader_parameter/gradient_flip = false
-shader_parameter/gradient_intensity = 0.1
-shader_parameter/gradient = ExtResource("3_6lqww")
-shader_parameter/dither_tex = ExtResource("2_3l5q6")
-
 [node name="postProcessingHangar" type="Node3D"]
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-material = SubResource("ShaderMaterial_g5uw4")
+material = ExtResource("1_2km80")
 custom_minimum_size = Vector2(100, 100)
 anchors_preset = 15
 anchor_right = 1.0

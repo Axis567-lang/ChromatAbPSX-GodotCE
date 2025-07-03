@@ -1,6 +1,8 @@
 @tool
 class_name DitherCe extends CompositorEffect
 
+const GLSL_FILE : RDShaderFile = preload("res://Scripts/GLSL/dither.glsl")
+
 # ------------- Custom Variables
 @export_group("Dither Properties")
 @export var chromab_polarity : float = -0.6
@@ -119,7 +121,7 @@ func _render_callback(effect_callback_type: int, render_data: RenderData) -> voi
 		
 		# Gradient Uniform
 		if gradient == null:
-			gradient = preload("res://PostProcessResources/bastille_1x8.tres") # tu textura por defecto
+			gradient = preload("res://Palettes/bastille_1x8.tres") # tu textura por defecto
 		#print("Gradient: ", gradient)
 		
 		var g_img : Image = gradient.get_image()
@@ -155,7 +157,7 @@ func _render_callback(effect_callback_type: int, render_data: RenderData) -> voi
 		
 		# Dither Uniform
 		if dither == null:
-			dither = preload("res://PostProcessResources/dither_bayer_4x4.png") # tu textura por defecto
+			dither = preload("res://NoiseTextures/dither_bayer_4x4.png") # tu textura por defecto
 		#print("Gradient: ", dither)
 		
 		var d_img : Image = dither.get_image()
@@ -226,7 +228,6 @@ func init_compute_shader() -> void:
 	rd = RenderingServer.get_rendering_device()
 	if not rd: return
 	
-	var glsl_file : RDShaderFile = load("res://Scripts/GLSL/dither.glsl")
-	shader = rd.shader_create_from_spirv(glsl_file.get_spirv())
+	shader = rd.shader_create_from_spirv(GLSL_FILE.get_spirv())
 	pipeline = rd.compute_pipeline_create(shader)
 	

@@ -1,11 +1,17 @@
 @tool
 class_name ChromaticAberrationCe extends CompositorEffect
 
+const GLSL_FILE : RDShaderFile = preload("res://Scripts/GLSL/chromatic_aberration.glsl")
+
 # ------------- Custom Variables
 @export_group("Chromat Aberr Properties")
-@export var chromab_polarity : float = -0.6
+@export var chromab_polarity : float = -0.275
+#@export_range(-2, 2.0, 0.01) var chromab_polarity : float = -0.6
 
-@export var vignette_intensity : float = 0.1
+@export var vignette_intensity : float = 1.695
+#@export_range(-0.385, 1.0, 0.01) var vignette_intensity: float = 0.1:
+	#set(value):
+		#vignette_intensity = max(value, -0.385)
 
 # ------------- Rendering Variables
 var rd : RenderingDevice
@@ -64,6 +70,9 @@ func _render_callback(effect_callback_type: int, render_data: RenderData) -> voi
 		var s_sampler_state : RDSamplerState = RDSamplerState.new()
 		s_sampler_state.min_filter = RenderingDevice.SAMPLER_FILTER_LINEAR
 		s_sampler_state.mag_filter = RenderingDevice.SAMPLER_FILTER_LINEAR
+		
+		s_sampler_state.repeat_u = RenderingDevice.SAMPLER_REPEAT_MODE_CLAMP_TO_EDGE
+		s_sampler_state.repeat_v = RenderingDevice.SAMPLER_REPEAT_MODE_CLAMP_TO_EDGE
 		var s_linear_sampler : RID = rd.sampler_create(s_sampler_state)
 		
 		var s_uniform : RDUniform = RDUniform.new()
@@ -86,8 +95,7 @@ func _render_callback(effect_callback_type: int, render_data: RenderData) -> voi
 func init_compute_shader() -> void:
 	rd = RenderingServer.get_rendering_device()
 	if not rd: return
-	
-	var glsl_file : RDShaderFile = load("res://Scripts/GLSL/chromatic_aberration.glsl")
-	shader = rd.shader_create_from_spirv(glsl_file.get_spirv())
+
+	shader = rd.shader_create_from_spirv(GLSL_FILE.get_spirv())
 	pipeline = rd.compute_pipeline_create(shader)
 	

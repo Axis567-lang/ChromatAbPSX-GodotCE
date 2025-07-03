@@ -19,7 +19,9 @@ layout(push_constant, std430) uniform Params {
 
 //	FUNCTION
 vec3 psx_tex(vec3 col, sampler2D tex, vec2 uv) {
+	// obtiene el tamaño de la textura
 	vec2 dither_size = vec2(textureSize(dither, 0)); // for GLES2: substitute for the dimensions of the dithering matrix
+	
 	vec2 buf_size = vec2(textureSize(tex, 0)) * pms.dither_scale;
 	vec3 dither_vec = texture(dither, uv * (buf_size / dither_size)).rgb - 0.5;
 
@@ -33,7 +35,7 @@ void main()
 	ivec2 pixel = ivec2(gl_GlobalInvocationID.xy);			// screen
     vec2 res = pms.screen_size;								// res
     // calculate uv
-    vec2 uv = pixel / res;									// uv								
+    vec2 uv = pixel / res;									// uv
 
     if(pixel.x >= res.x || pixel.y >= res.y) return;
 

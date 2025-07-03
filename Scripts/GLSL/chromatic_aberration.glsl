@@ -36,6 +36,24 @@ vec3 chrom_ab( sampler2D screen, vec2 uv ) {
 	return col;
 }
 
+// vec3 ACESFilm(vec3 x) {
+// 	const float a = 2.51;
+// 	const float b = 0.03;
+// 	const float c = 2.43;
+// 	const float d = 0.59;
+// 	const float e = 0.14;
+// 	return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+// }
+
+// vec3 reinhard(vec3 x, float white_point)
+// {
+// 	return x / (x + vec3(white_point));
+// }
+
+// float remap(float val, float oldMin, float oldMax) {
+//     return clamp((val - oldMin) / (oldMax - oldMin), 0.0, 1.0);
+// }
+
 void main()
 {
 	ivec2 pixel = ivec2(gl_GlobalInvocationID.xy);			// screen
@@ -48,9 +66,7 @@ void main()
     vec4 color = imageLoad(screen_tex, pixel);				// col
 
 	//	Parameters
-	float chr_pol = clamp(pms.chromab_polarity, -0.185, 1.0);
-	float vgt_int = max(pms.vignette_intensity, 0.0);
-	float c = 1.0 + chr_pol - pow(radial_mask(uv), vgt_int);
+	// float c = 1.0 + pms.chromab_polarity - pow(radial_mask(uv), pms.vignette_intensity);
 
 	// SOL 1 -> si chr_pol o vgt_int baja de 0 no pasa nada. No sé si eso sea muy correcto
 	// float c = clamp(1.0 + pms.chromab_polarity - pow(radial_mask(uv), pms.vignette_intensity), 0.0, 1.0);
@@ -61,7 +77,25 @@ void main()
 	// // float c = 1.0 + pms.chromab_polarity - soft_vignette; //	sin clamp -> sí aparecen flashes
 	// float c = clamp(1.0 + pms.chromab_polarity - soft_vignette, 0.0, 1.0);
 
+	// SOL 3
+		// -->
+	// float mask = smoothstep(0.0, 1.0, radial_mask(uv));
+	// float c = clamp(1.0 + pms.chromab_polarity - mask * pms.vignette_intensity, 0.0, 1.0);
+		
+		// -->
+	float c_raw = 1.0 + pms.chromab_polarity - pow(radial_mask(uv), pms.vignette_intensity);
+
+	float c_min = -0.5;       // valor mínimo esperado para c_raw
+	float c_max = 1.0;       // valor máximo esperado para c_raw
+
+	// float c = remap(c_raw, c_min, c_max);
+
+	float c = smoothstep(c_min, c_max, c_raw);
+
 	vec3 col_chr = mix(color.rgb, chrom_ab(screen_sample, uv), c);
+
+	// col_chr = ACESFilm(col_chr);
+	// col_chr = reinhard(col_chr, 1.5); // Valores >1 se comprimen; <=1 quedan casi igual
 
 	imageStore(screen_tex, pixel, vec4(col_chr, 1.0));
 }

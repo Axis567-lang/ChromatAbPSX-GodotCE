@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bbhw8sgom38sw"
-path="res://.godot/imported/dither_bayer_4x4.png-821aeecf303b584bcf676eb464b4d650.ctex"
+path="res://.godot/imported/dither_bayer_4x4.png-f1bd37fcd716ed78bda512c4f7a50bcc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://PostProcessResources/dither_bayer_4x4.png"
-dest_files=["res://.godot/imported/dither_bayer_4x4.png-821aeecf303b584bcf676eb464b4d650.ctex"]
+source_file="res://NoiseTextures/dither_bayer_4x4.png"
+dest_files=["res://.godot/imported/dither_bayer_4x4.png-f1bd37fcd716ed78bda512c4f7a50bcc.ctex"]
 
 [params]
 

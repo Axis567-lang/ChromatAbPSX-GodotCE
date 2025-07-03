@@ -1,22 +1,16 @@
-[gd_scene load_steps=32 format=3 uid="uid://bxupal2ww6glp"]
+[gd_scene load_steps=22 format=3 uid="uid://bxupal2ww6glp"]
 
 [ext_resource type="PackedScene" uid="uid://cmsqjjs56ulbs" path="res://Scenes/Controllers/FreeLookCamera.tscn" id="1_lvqw2"]
 [ext_resource type="LightmapGIData" uid="uid://d1g71c1xqsdyp" path="res://Scenes/Hangar.lmbake" id="2_4y25m"]
 [ext_resource type="PackedScene" uid="uid://df3v8ucyursk8" path="res://Scenes/Environment/world_environment.tscn" id="3_g07g3"]
 [ext_resource type="PackedScene" uid="uid://ccjmuj0wg0hgi" path="res://Scenes/Environment/space_craft_hangar.tscn" id="4_b2mim"]
-[ext_resource type="Script" path="res://Scripts/ComputeShaders/chromatic_aberration_ce.gd" id="4_vc43m"]
-[ext_resource type="Texture2D" uid="uid://bbhw8sgom38sw" path="res://PostProcessResources/dither_bayer_4x4.png" id="5_de0dt"]
+[ext_resource type="Script" path="res://Scripts/ComputeShaders/chromatic_aberration_ce.gd" id="4_cdk2j"]
 [ext_resource type="PackedScene" uid="uid://vg8yuihj5huq" path="res://Models/Objects/ivy_tall.tscn" id="5_rjuy3"]
-[ext_resource type="Texture2D" uid="uid://djin13bdw7wcm" path="res://PostProcessResources/bastille_1x8.tres" id="6_mcig4"]
 [ext_resource type="PackedScene" uid="uid://bcsucihl18y5w" path="res://Models/Objects/ivy_wide.tscn" id="6_t7c5u"]
-[ext_resource type="Script" path="res://Scripts/ComputeShaders/psx_ce.gd" id="7_i0jdj"]
 [ext_resource type="PackedScene" uid="uid://cbjctyhuj0xmc" path="res://Models/Objects/ivy_corner.tscn" id="7_qbeie"]
 [ext_resource type="PackedScene" uid="uid://dxdi4u4735wnl" path="res://Models/Objects/fern.tscn" id="8_dyb2b"]
-[ext_resource type="Script" path="res://Scripts/ComputeShaders/palette_remap_ce.gd" id="8_xjufq"]
 [ext_resource type="PackedScene" uid="uid://cs4npuq7uy78y" path="res://Scenes/Environment/objects.tscn" id="9_0hv3d"]
-[ext_resource type="Script" path="res://Scripts/ComputeShaders/hard_light_ce.gd" id="9_tft8l"]
 [ext_resource type="PackedScene" uid="uid://8i3ub1lfxbgi" path="res://Models/Objects/can.tscn" id="10_mujrk"]
-[ext_resource type="Script" path="res://Scripts/ComputeShaders/vignette_ce.gd" id="10_qwrs2"]
 [ext_resource type="PackedScene" uid="uid://x4wqam8k4bq3" path="res://Scenes/Environment/dust_particles.tscn" id="11_h3umg"]
 [ext_resource type="PackedScene" uid="uid://ddyscklcphe25" path="res://Models/Objects/ivy2_shadowcaster.tscn" id="12_5rx4c"]
 [ext_resource type="PackedScene" uid="uid://dncguvff05q2p" path="res://Models/Objects/doorway.tscn" id="13_uiat6"]
@@ -26,67 +20,19 @@
 [ext_resource type="PackedScene" uid="uid://blkf2n5onfgjs" path="res://Models/Objects/hammock.tscn" id="17_554jf"]
 [ext_resource type="PackedScene" uid="uid://cvi0md4h0tigc" path="res://Scenes/Environment/lights.tscn" id="18_8hkqx"]
 
-[sub_resource type="CompositorEffect" id="CompositorEffect_220oi"]
+[sub_resource type="CompositorEffect" id="CompositorEffect_xt6jp"]
 resource_local_to_scene = false
 resource_name = ""
 enabled = true
 effect_callback_type = 4
 needs_motion_vectors = false
 needs_normal_roughness = false
-script = ExtResource("4_vc43m")
-chromab_polarity = -0.6
-vignette_intensity = 0.1
-
-[sub_resource type="CompositorEffect" id="CompositorEffect_xtnx4"]
-resource_local_to_scene = false
-resource_name = ""
-enabled = true
-effect_callback_type = 4
-needs_motion_vectors = false
-needs_normal_roughness = false
-script = ExtResource("7_i0jdj")
-psx_toggle = true
-dither_scale = 1.0
-gradient = ExtResource("6_mcig4")
-dither = ExtResource("5_de0dt")
-
-[sub_resource type="CompositorEffect" id="CompositorEffect_kb5qp"]
-resource_local_to_scene = false
-resource_name = ""
-enabled = true
-effect_callback_type = 4
-needs_motion_vectors = false
-needs_normal_roughness = false
-script = ExtResource("8_xjufq")
-gradient_flip = false
-gradient_intensity = 0.15
-gradient = ExtResource("6_mcig4")
-
-[sub_resource type="CompositorEffect" id="CompositorEffect_pgfm5"]
-resource_local_to_scene = false
-resource_name = ""
-enabled = true
-effect_callback_type = 4
-needs_motion_vectors = false
-needs_normal_roughness = false
-script = ExtResource("9_tft8l")
-noise_frequency = 1.0
-noise_tiling = 0.25
-noise_intensity = 0.025
-
-[sub_resource type="CompositorEffect" id="CompositorEffect_1xvr4"]
-resource_local_to_scene = false
-resource_name = ""
-enabled = true
-effect_callback_type = 4
-needs_motion_vectors = false
-needs_normal_roughness = false
-script = ExtResource("10_qwrs2")
-vignette_intensity = 0.1
-vignette_rgba = Vector4(0, 0, 0, 1)
+script = ExtResource("4_cdk2j")
+chromab_polarity = 1.65
+vignette_intensity = 1.92
 
 [sub_resource type="Compositor" id="Compositor_o6lsx"]
-compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_220oi"), SubResource("CompositorEffect_xtnx4"), SubResource("CompositorEffect_kb5qp"), SubResource("CompositorEffect_pgfm5"), SubResource("CompositorEffect_1xvr4")])
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_xt6jp")])
 
 [node name="Hangar" type="Node3D"]
 

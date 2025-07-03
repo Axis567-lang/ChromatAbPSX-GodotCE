@@ -1,6 +1,8 @@
 @tool
 class_name HardLightCe extends CompositorEffect
 
+const GLSL_FILE : RDShaderFile = preload("res://Scripts/GLSL/hard_light.glsl")
+
 # ------------- Custom Variables
 @export_group("HardLight Properties")
 @export var noise_frequency : float = 1.0
@@ -79,7 +81,6 @@ func init_compute_shader() -> void:
 	rd = RenderingServer.get_rendering_device()
 	if not rd: return
 	
-	var glsl_file : RDShaderFile = load("res://Scripts/GLSL/hard_light.glsl")
-	shader = rd.shader_create_from_spirv(glsl_file.get_spirv())
+	shader = rd.shader_create_from_spirv(GLSL_FILE.get_spirv())
 	pipeline = rd.compute_pipeline_create(shader)
 	
