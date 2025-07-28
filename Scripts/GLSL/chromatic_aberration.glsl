@@ -83,7 +83,8 @@ void main()
 	// float c = clamp(1.0 + pms.chromab_polarity - mask * pms.vignette_intensity, 0.0, 1.0);
 		
 		// -->
-	float c_raw = 1.0 + pms.chromab_polarity - pow(radial_mask(uv), pms.vignette_intensity);
+	// float c_raw = 1.0 + pms.chromab_polarity - pow(radial_mask(uv), pms.vignette_intensity);
+	float c_raw = 1.0 + pms.chromab_polarity + radial_mask(uv) * pms.vignette_intensity;
 
 	float c_min = -0.5;       // valor mínimo esperado para c_raw
 	float c_max = 1.0;       // valor máximo esperado para c_raw

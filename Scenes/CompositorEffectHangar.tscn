@@ -1,10 +1,9 @@
-[gd_scene load_steps=22 format=3 uid="uid://bxupal2ww6glp"]
+[gd_scene load_steps=20 format=3 uid="uid://bxupal2ww6glp"]
 
 [ext_resource type="PackedScene" uid="uid://cmsqjjs56ulbs" path="res://Scenes/Controllers/FreeLookCamera.tscn" id="1_lvqw2"]
 [ext_resource type="LightmapGIData" uid="uid://d1g71c1xqsdyp" path="res://Scenes/Hangar.lmbake" id="2_4y25m"]
 [ext_resource type="PackedScene" uid="uid://df3v8ucyursk8" path="res://Scenes/Environment/world_environment.tscn" id="3_g07g3"]
 [ext_resource type="PackedScene" uid="uid://ccjmuj0wg0hgi" path="res://Scenes/Environment/space_craft_hangar.tscn" id="4_b2mim"]
-[ext_resource type="Script" path="res://Scripts/ComputeShaders/chromatic_aberration_ce.gd" id="4_cdk2j"]
 [ext_resource type="PackedScene" uid="uid://vg8yuihj5huq" path="res://Models/Objects/ivy_tall.tscn" id="5_rjuy3"]
 [ext_resource type="PackedScene" uid="uid://bcsucihl18y5w" path="res://Models/Objects/ivy_wide.tscn" id="6_t7c5u"]
 [ext_resource type="PackedScene" uid="uid://cbjctyhuj0xmc" path="res://Models/Objects/ivy_corner.tscn" id="7_qbeie"]
@@ -20,19 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://blkf2n5onfgjs" path="res://Models/Objects/hammock.tscn" id="17_554jf"]
 [ext_resource type="PackedScene" uid="uid://cvi0md4h0tigc" path="res://Scenes/Environment/lights.tscn" id="18_8hkqx"]
 
-[sub_resource type="CompositorEffect" id="CompositorEffect_xt6jp"]
-resource_local_to_scene = false
-resource_name = ""
-enabled = true
-effect_callback_type = 4
-needs_motion_vectors = false
-needs_normal_roughness = false
-script = ExtResource("4_cdk2j")
-chromab_polarity = 1.65
-vignette_intensity = 1.92
-
 [sub_resource type="Compositor" id="Compositor_o6lsx"]
-compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_xt6jp")])
 
 [node name="Hangar" type="Node3D"]
 

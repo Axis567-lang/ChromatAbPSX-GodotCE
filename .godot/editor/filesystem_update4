@@ -4,4 +4,4 @@ res://Materials/Effects/LensFlare1.tres
 res://Shaders/postprocess.gdshader
 res://Palettes/bastille_1x8.tres
 res://Materials/ShaderMaterials/PSXDither.tres
-res://Scripts/ComputeShaders/chromatic_aberration_ce.gd
+res://Scripts/ComputeShaders/color_quantization_ce.gd
