@@ -1,7 +1,7 @@
 @tool
 class_name ColorQuantizationCe extends CompositorEffect
 
-@export var lut_table : Texture3D
+@export var lut_table : Image
 
 const GLSL_FILE : RDShaderFile = preload("res://Scripts/GLSL/color_quantization.glsl")
 
@@ -82,9 +82,42 @@ func _render_callback(p_callback_type : int, render_data : RenderData):
 		var uniform_set : RID = UniformSetCacheRD.get_cache(shader, 0, [image_uniform, sampler_uniform])
 		
 		# LUT Table
-		prints("lut_table: ", lut_table)
+		#prints("lut_table: ", lut_table)
 		if lut_table == null:
-			lut_table = preload("res://LUT/LUT_table.png")
+			lut_table = preload("res://LUT/16-8bit.png")
+		
+		## TEST 4 /////////////////////////////////////////////////////////////////////		
+		#var g_img : Image = gradient.get_image()
+		lut_table.convert(Image.FORMAT_RGBAF)
+		#print("Image: ", lut_table)
+		
+		var lut_fmt = RDTextureFormat.new()
+		lut_fmt.width = lut_table.get_width()
+		lut_fmt.height = lut_table.get_height()
+		lut_fmt.format = RenderingDevice.DATA_FORMAT_R32G32B32A32_SFLOAT
+		lut_fmt.usage_bits = RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT | RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT | RenderingDevice.TEXTURE_USAGE_CAN_UPDATE_BIT
+		
+		var lut_sampler_state : RDSamplerState = RDSamplerState.new()
+		lut_sampler_state.min_filter = RenderingDevice.SAMPLER_FILTER_NEAREST
+		lut_sampler_state.mag_filter = RenderingDevice.SAMPLER_FILTER_NEAREST
+		lut_sampler_state.repeat_u = RenderingDevice.SAMPLER_REPEAT_MODE_REPEAT
+		lut_sampler_state.repeat_v = RenderingDevice.SAMPLER_REPEAT_MODE_REPEAT
+		#print("Sampler: ", lut_sampler_state)
+		
+		var lut_linear_sampler : RID = rd.sampler_create(lut_sampler_state)
+		#print("Linear Sampler: ", lut_linear_sampler)
+		
+		var lut_tex_view = RDTextureView.new()
+		
+		var lut_tex = rd.texture_create(lut_fmt, lut_tex_view, [lut_table.get_data()])
+		var lut_sampler_uniform := RDUniform.new()
+		lut_sampler_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE
+		lut_sampler_uniform.binding = 0
+		lut_sampler_uniform.add_id(lut_linear_sampler)
+		lut_sampler_uniform.add_id(lut_tex)
+		
+		#var g_uniform_set: RID = rd.uniform_set_create([lut_sampler_uniform], shader, 1)
+		## TEST 4 END /////////////////////////////////////////////////////////////////
 		
 		## TEST 3 /////////////////////////////////////////////////////////////////////
 		#	---------------------------------------------------------------------------
@@ -143,69 +176,69 @@ func _render_callback(p_callback_type : int, render_data : RenderData):
 		#var uniform_set = rd.uniform_set_create([sampler_uniform], shader, 3)
 		#	---------------------------------------------------------------------------
 		
-		var width : int = lut_table.get_width()
-		var height : int = lut_table.get_height()
-		var depth : int = lut_table.get_depth()
-		
-		var images : Array[Image] = lut_table.get_data()
-		
-		# Preparar el buffer concatenando todas las slices en orden Z
-		var total_bytes_per_slice = width * height * 4 * 4 # 4 canales (RGBA) * 4 bytes (float32)
-		prints("Bytes per Slice: ", total_bytes_per_slice)
-		var total_bytes = total_bytes_per_slice * depth
-		prints("Total Bytes: ", total_bytes)
-		
-		# Crear PackedByteArray con tamaño total
-		var all_data = PackedByteArray()
-		all_data.resize(total_bytes)
-		
-		for z in range(depth):
-			var slice_img : Image = images[z]
-			if slice_img.get_format() != 11:
-				slice_img.convert(Image.FORMAT_RGBAF)
-			prints("Slice Format: ", slice_img.get_format())
-			
-			var slice_data : PackedByteArray = slice_img.get_data() # bytes de la imagen
-			print("Slice Data Size:", slice_data.size())
-			
-			# Copiar los bytes de slice_data en all_data en offset adecuado
-			for i in range(total_bytes_per_slice):
-				all_data[z * total_bytes_per_slice + i] = slice_data[i]
+		#var width : int = lut_table.get_width()
+		#var height : int = lut_table.get_height()
+		#var depth : int = lut_table.get_depth()
+		#
+		#var images : Array[Image] = lut_table.get_data()
+		#
+		## Preparar el buffer concatenando todas las slices en orden Z
+		#var total_bytes_per_slice = width * height * 4 * 4 # 4 canales (RGBA) * 4 bytes (float32)
+		#prints("Bytes per Slice: ", total_bytes_per_slice)
+		#var total_bytes = total_bytes_per_slice * depth
+		#prints("Total Bytes: ", total_bytes)
+		#
+		## Crear PackedByteArray con tamaño total
+		#var all_data = PackedByteArray()
+		#all_data.resize(total_bytes)
+		#
+		#for z in range(depth):
+			#var slice_img : Image = images[z]
+			#if slice_img.get_format() != 11:
+				#slice_img.convert(Image.FORMAT_RGBAF)
+			#prints("Slice Format: ", slice_img.get_format())
+			#
+			#var slice_data : PackedByteArray = slice_img.get_data() # bytes de la imagen
+			#print("Slice Data Size:", slice_data.size())
+			#
+			## Copiar los bytes de slice_data en all_data en offset adecuado
+			#for i in range(total_bytes_per_slice):
+				#all_data[z * total_bytes_per_slice + i] = slice_data[i]
 		
 		#var g_img : Image = gradient.get_image()
 		#g_img.convert(Image.FORMAT_RGBAF)
 		#print("Image: ", g_img)
 		
-		## Formato de la Textura
-		var l_fmt = RDTextureFormat.new()
-		l_fmt.width = width
-		l_fmt.height = height
-		l_fmt.depth = depth
-		l_fmt.format = RenderingDevice.DATA_FORMAT_R32G32B32A32_SFLOAT
-		l_fmt.usage_bits = RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT | RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT
-		
-		## Sampler
-		var l_sampler_state : RDSamplerState = RDSamplerState.new()
-		l_sampler_state.min_filter = RenderingDevice.SAMPLER_FILTER_NEAREST
-		l_sampler_state.mag_filter = RenderingDevice.SAMPLER_FILTER_NEAREST
-		l_sampler_state.repeat_u = RenderingDevice.SAMPLER_REPEAT_MODE_REPEAT
-		l_sampler_state.repeat_v = RenderingDevice.SAMPLER_REPEAT_MODE_REPEAT
-		l_sampler_state.repeat_w = RenderingDevice.SAMPLER_REPEAT_MODE_REPEAT
-		print("Sampler: ", l_sampler_state)
-		
-		var l_sampler_rid : RID = rd.sampler_create(l_sampler_state)
-		print("Linear Sampler: ", l_sampler_rid)
-		
-		var l_tex_view := RDTextureView.new()
-		
-		var l_tex : RID = rd.texture_create(l_fmt, l_tex_view, [all_data])
-		print("Texture Created: ", l_tex)
-		
-		var l_sampler_uniform := RDUniform.new()
-		l_sampler_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE
-		l_sampler_uniform.binding = 0
-		l_sampler_uniform.add_id(l_sampler_rid)
-		l_sampler_uniform.add_id(l_tex)
+		### Formato de la Textura
+		#var l_fmt = RDTextureFormat.new()
+		#l_fmt.width = width
+		#l_fmt.height = height
+		#l_fmt.depth = depth
+		#l_fmt.format = RenderingDevice.DATA_FORMAT_R32G32B32A32_SFLOAT
+		#l_fmt.usage_bits = RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT | RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT
+		#
+		### Sampler
+		#var l_sampler_state : RDSamplerState = RDSamplerState.new()
+		#l_sampler_state.min_filter = RenderingDevice.SAMPLER_FILTER_NEAREST
+		#l_sampler_state.mag_filter = RenderingDevice.SAMPLER_FILTER_NEAREST
+		#l_sampler_state.repeat_u = RenderingDevice.SAMPLER_REPEAT_MODE_REPEAT
+		#l_sampler_state.repeat_v = RenderingDevice.SAMPLER_REPEAT_MODE_REPEAT
+		#l_sampler_state.repeat_w = RenderingDevice.SAMPLER_REPEAT_MODE_REPEAT
+		#print("Sampler: ", l_sampler_state)
+		#
+		#var l_sampler_rid : RID = rd.sampler_create(l_sampler_state)
+		#print("Linear Sampler: ", l_sampler_rid)
+		#
+		#var l_tex_view := RDTextureView.new()
+		#
+		#var l_tex : RID = rd.texture_create(l_fmt, l_tex_view, [all_data])
+		#print("Texture Created: ", l_tex)
+		#
+		#var l_sampler_uniform := RDUniform.new()
+		#l_sampler_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE
+		#l_sampler_uniform.binding = 0
+		#l_sampler_uniform.add_id(l_sampler_rid)
+		#l_sampler_uniform.add_id(l_tex)
 		
 		#var l_uniform_set: RID = rd.uniform_set_create([l_sampler_uniform], shader, 3)
 		
@@ -270,13 +303,13 @@ func _render_callback(p_callback_type : int, render_data : RenderData):
 		#if lut_uniform : print("lut uniform")
 		## TEST 1 END ////////////////////////////////////////////////////////////////
 		
-		#var l_uniform_set: RID = UniformSetCacheRD.get_cache(shader, 1, [l_sampler_uniform])
-		#if l_uniform_set : print("l_uniform_set")
+		var lut_uniform_set: RID = UniformSetCacheRD.get_cache(shader, 1, [lut_sampler_uniform])
+		#if lut_uniform_set : print("l_uniform_set")
 		# Record and submit compute commands
 		var compute_list : int = rd.compute_list_begin()
 		rd.compute_list_bind_compute_pipeline(compute_list, pipeline)
 		rd.compute_list_bind_uniform_set(compute_list, uniform_set, 0)
-		#rd.compute_list_bind_uniform_set(compute_list, l_uniform_set, 1)
+		rd.compute_list_bind_uniform_set(compute_list, lut_uniform_set, 1)
 		rd.compute_list_set_push_constant(compute_list, push_data, push_data.size())
 		rd.compute_list_dispatch(compute_list, x_groups, y_groups, 1)
 		rd.compute_list_end()

@@ -3,6 +3,7 @@
 
 layout(local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 
+// PARAMETERS
 layout(rgba16f, binding = 0, set = 0) uniform image2D screen_tex;
 
 layout(push_constant, std430) uniform Params {
@@ -10,8 +11,65 @@ layout(push_constant, std430) uniform Params {
 } pms;
 
 layout(binding = 1, set = 0) uniform sampler2D screen_sample;
-// layout(binding = 0, set = 1) uniform sampler3D lut_sample;
 
+layout(binding = 0, set = 1) uniform sampler2D lut_sample;
+
+// FUNCTIONS
+
+// uniform sampler2D screen_sample;
+// uniform sampler2D lut_sample;
+
+// uniform ivec2 lut_size; // dimensiones de la LUT: (256, 16)
+
+// vec3 quantizeRGB(vec3 inCol)
+// {
+// 	float nearest = 99999.0;
+// 	vec3 best_color = vec3(0.0);
+	
+// 	for (int y = 0; y < lut_size.y; ++y)
+// 	{
+// 		for (int x = 0; x < lut_size.x; ++x)
+// 		{
+// 			// Coordenadas de textura UV
+// 			vec2 uv = (vec2(x, y) + 0.5) / vec2(lut_size);
+// 			vec3 paletteCol = texture(lut_sample, uv).rgb;
+			
+// 			float dist = dot(paletteCol - inCol, paletteCol - inCol); // squared distance
+			
+// 			if (dist < nearest)
+// 			{
+// 				nearest = dist;
+// 				best_color = paletteCol;
+// 			}
+// 		}
+// 	}
+	
+// 	return best_color;
+// }
+
+
+// Quantize with distances in RGB
+// vec3 quantizeRGB( vec3 inCol )
+// {
+//     vec3 col = vec3(0);
+//     float nearest = 100.0;
+    
+//     for (int i = 0; i < paletteSize; i++)
+//     {
+//         vec3 paletteCol = palette[i];
+//         float dist = dot2(paletteCol - inCol);
+        
+//         if (dist < nearest) 
+//         {
+//             col = paletteCol;
+//             nearest = dist;
+//         }
+//     }
+    
+//     return col;
+// }
+
+// MAIN
 void main()
 {
 	// Convierte la posición global del hilo de cómputo a coordenadas de pixel (x, y)
@@ -30,10 +88,21 @@ void main()
     vec3 in_color;
 	in_color = texture( screen_sample, uv ).rgb;
 
+    vec3 lut_color;
+    lut_color = texture( lut_sample, uv ).rgb;
+
+    // vec3 input_color = ...; // algún color original
+    // float index = input_color.r; // asumir que 'r' codifica un índice
+    // vec2 uv = vec2(index / 255.0, 0.0); // buscarlo en la fila 0, por ejemplo
+    // vec3 mapped_color = texture(lut_sample, uv).rgb;
+
+
+    // col = quantizeRGB(col);
+
     // vec3 quantized = texture(lut_sample, in_color).rgb;
 
 	// imageStore(screen_tex, pixel, vec4(quantized, 1.0));
-    imageStore(screen_tex, pixel, vec4(in_color, 1.0));
+    imageStore(screen_tex, pixel, vec4(lut_color, 1.0));
 }
 
 /*

@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://dklavec8633fs"
+path="res://.godot/imported/16-8bit.png-25977e09afd453b7f9744071441bc9d2.image"
+
+[deps]
+
+source_file="res://LUT/16-8bit.png"
+dest_files=["res://.godot/imported/16-8bit.png-25977e09afd453b7f9744071441bc9d2.image"]
+
+[params]
+
