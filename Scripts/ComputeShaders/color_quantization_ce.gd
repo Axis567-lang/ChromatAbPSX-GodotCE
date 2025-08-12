@@ -51,14 +51,19 @@ func _render_callback(p_callback_type : int, render_data : RenderData):
 	var x_groups := int((size.x - 1) / 16.0) + 1
 	var y_groups := int((size.y - 1) / 16.0) + 1
 	
+	# LUT
+	if lut_table == null:
+			lut_table = preload("res://LUT/16-8bit.png")
+	
 	# Pack push constants : [raster_size.x, raster_size.y, polarity, edge_fade]
 	var push_constants := PackedFloat32Array([
 		size.x,
 		size.y,
+		lut_table.get_width(),
+		lut_table.get_height()
 		])
-	push_constants.append_array([0.0,0.0])
 	var push_data : PackedByteArray = push_constants.to_byte_array()
-
+	
 	# Loop over each view (monoscopic = 1 view)
 	var view_count : int = render_scene_buffers.get_view_count()
 	for view in range(view_count):
@@ -82,10 +87,6 @@ func _render_callback(p_callback_type : int, render_data : RenderData):
 		var uniform_set : RID = UniformSetCacheRD.get_cache(shader, 0, [image_uniform, sampler_uniform])
 		
 		# LUT Table
-		#prints("lut_table: ", lut_table)
-		if lut_table == null:
-			lut_table = preload("res://LUT/16-8bit.png")
-		
 		## TEST 4 /////////////////////////////////////////////////////////////////////		
 		#var g_img : Image = gradient.get_image()
 		lut_table.convert(Image.FORMAT_RGBAF)
