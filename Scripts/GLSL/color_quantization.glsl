@@ -17,18 +17,37 @@ layout(binding = 1, set = 0) uniform sampler2D screen_sample;
 layout(binding = 0, set = 1) uniform sampler2D lut_sample;
 
 // LOCAL VARIABLES
-float u_LUT_Size = pms.lut_height;
-vec2  u_LUT_TexSize = vec2(pms.lut_width, pms.lut_height);
+vec2  lut_tex_size = vec2(pms.lut_width, pms.lut_height);
+float lut_depth = round( pow(lut_tex_size.x * lut_tex_size.y, 1.0/3.0) );
+
+//  #---------- QUANTIZATION BY LUT INDEXING ----------#
 
 // FUNCTIONS
-vec2 computeUV(vec3 index) {
-        float slice = index.z; // capa en Z
-        float x = index.x + slice * u_LUT_Size;
-        float y = index.y;
+/*vec2 computeUV(vec3 index) 
+{
+    float slice = index.z; // capa en Z
+    float x = index.x + slice * lut_depth;
+    float y = index.y;
 
-        return (vec2(x, y) + 0.5) / u_LUT_TexSize;
-    }
+    return (vec2(x, y) + 0.5) / lut_tex_size;
+}*/
 
+vec2 computeUV(vec3 index)
+{
+    // index = floor(color * (lut_depth - 1))
+    float slice = index.z;
+
+    // Para LUT 64x64x64 en textura 512x512
+    float tilesPerRow = lut_tex_size.x / lut_depth; // 512 / 64
+
+    float tileX = mod(slice, tilesPerRow);
+    float tileY = floor(slice / tilesPerRow);
+
+    float x = index.x + tileX * lut_depth;
+    float y = index.y + tileY * lut_depth;
+
+    return (vec2(x, y) + 0.5) / lut_tex_size;
+}
 
 // MAIN
 void main()
@@ -46,17 +65,61 @@ void main()
 	vec2 uv = vec2(pixel) / size;
 	//	-----------------
 
-    vec3 in_color;
-	in_color = texture( screen_sample, uv ).rgb;
-
     vec3 inCol = texture(screen_sample, uv).rgb;
-    vec3 index = floor(inCol * (u_LUT_Size - 1.0));
+    vec3 index = floor(inCol * (lut_depth - 1.0));
 
     vec2 lut_uv = computeUV(index);
     vec3 lut_color = texture(lut_sample, lut_uv).rgb;
 
     imageStore(screen_tex, pixel, vec4(lut_color, 1.0));
 }
+// # -------------------------------------------------------------------- #
+
+// # --------- QUANTIZATION BY LUMINANCE ------ #
+/*
+// FUNCTIONS
+vec2 computeUV(vec3 index) 
+{
+    float slice = index.z; // capa en Z
+    float x = index.x + slice * lut_depth;
+    float y = index.y;
+
+    return (vec2(x, y) + 0.5) / lut_tex_size;
+
+}
+
+// MAIN
+void main()
+{
+	// Convierte la posición global del hilo de cómputo a coordenadas de pixel (x, y)
+	ivec2 pixel = ivec2(gl_GlobalInvocationID.xy);
+
+	// Obtiene el tamaño total de la pantalla desde los push constants
+	vec2 size = pms.screen_size;
+
+	// Si el pixel está fuera de los límites, termina la ejecución del hilo
+	if (pixel.x >= size.x || pixel.y >= size.y) return;
+
+	// Normaliza las coordenadas del pixel para obtener UV (entre 0 y 1)
+	vec2 uv = vec2(pixel) / size;
+	//	-----------------
+
+    vec3 inCol = texture(screen_sample, uv).rgb;
+    vec3 index = floor(inCol * (lut_depth - 1.0));
+
+    // float lum = dot( inCol, vec3( 0.2126, 0.7152, 0.0722 ) );
+	// vec3 color_lum = texture( lut_sample, vec2(lum, 0) ).rgb;
+
+    float lum = dot(inCol, vec3(0.2126, 0.7152, 0.0722));
+    vec2 uv_lut = vec2(lum, 0.5); // usar el centro vertical de la LUT
+    vec3 color_lum = texture(lut_sample, uv_lut).rgb;
+
+
+    // imageStore(screen_tex, pixel, vec4(lut_color, 1.0));
+    imageStore(screen_tex, pixel, vec4(color_lum, 1.0));
+}
+*/
+// # -------------------------------------------------------------------- #
 
 /*
 #define dot2(a) dot(a,a)

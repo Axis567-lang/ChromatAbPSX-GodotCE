@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://bbxr4ihb7gyof"
+path="res://.godot/imported/52-8bit.png-e5ae36420a4aebdff2596d76b4fc1861.image"
+
+[deps]
+
+source_file="res://LUT/52-8bit.png"
+dest_files=["res://.godot/imported/52-8bit.png-e5ae36420a4aebdff2596d76b4fc1861.image"]
+
+[params]
+

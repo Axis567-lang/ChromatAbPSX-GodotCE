@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://bpy8c0fe7tx17"
+path="res://.godot/imported/lut_8x8_blue.png-8f82bfeb0bca6b6da65db94212ab1947.image"
+
+[deps]
+
+source_file="res://LUT/lut_8x8_blue.png"
+dest_files=["res://.godot/imported/lut_8x8_blue.png-8f82bfeb0bca6b6da65db94212ab1947.image"]
+
+[params]
+

@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://b7pgp7hspdae0"
+path="res://.godot/imported/lut_16x1_bright.png-b76a9aa94f6666da3ab6ace5032be793.image"
+
+[deps]
+
+source_file="res://LUT/lut_16x1_bright.png"
+dest_files=["res://.godot/imported/lut_16x1_bright.png-b76a9aa94f6666da3ab6ace5032be793.image"]
+
+[params]
+

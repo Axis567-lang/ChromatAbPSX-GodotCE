@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://bsthncb2cmd3s"
+path="res://.godot/imported/lut_8x8_neutral.png-525a7e8010251a9cb1044717c4d92568.image"
+
+[deps]
+
+source_file="res://LUT/lut_8x8_neutral.png"
+dest_files=["res://.godot/imported/lut_8x8_neutral.png-525a7e8010251a9cb1044717c4d92568.image"]
+
+[params]
+
