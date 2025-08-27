@@ -10,11 +10,16 @@ var shader : RID
 var pipeline : RID
 var nearest_sampler : RID
 
+var lut_linear_sampler : RID
+var lut_tex : RID
+
 func _notification(what : int):
 	if what == NOTIFICATION_PREDELETE:
 		if shader : RenderingServer.free_rid(shader)
 		if pipeline : RenderingServer.free_rid(pipeline)
 		if nearest_sampler : RenderingServer.free_rid(nearest_sampler)
+		if lut_linear_sampler : RenderingServer.free_rid(lut_linear_sampler)
+		if lut_tex : RenderingServer.free_rid(lut_tex)
 
 func _init():
 	effect_callback_type = EFFECT_CALLBACK_TYPE_POST_TRANSPARENT
@@ -32,6 +37,30 @@ func _init_compute():
 	sampler_state.repeat_u = RenderingDevice.SAMPLER_REPEAT_MODE_CLAMP_TO_EDGE
 	sampler_state.repeat_v = RenderingDevice.SAMPLER_REPEAT_MODE_CLAMP_TO_EDGE
 	nearest_sampler = rd.sampler_create(sampler_state)
+	
+	if lut_table == null:
+			#lut_table = preload("res://LUT/16-8bit.png")
+			lut_table = preload("res://LUT/lut_8x8_neutral.png")
+	
+	lut_table.convert(Image.FORMAT_RGBAF)
+	
+	var lut_fmt = RDTextureFormat.new()
+	lut_fmt.width = lut_table.get_width()
+	lut_fmt.height = lut_table.get_height()
+	lut_fmt.format = RenderingDevice.DATA_FORMAT_R32G32B32A32_SFLOAT
+	lut_fmt.usage_bits = RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT | RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT | RenderingDevice.TEXTURE_USAGE_CAN_UPDATE_BIT
+	
+	var lut_sampler_state : RDSamplerState = RDSamplerState.new()
+	lut_sampler_state.min_filter = RenderingDevice.SAMPLER_FILTER_NEAREST
+	lut_sampler_state.mag_filter = RenderingDevice.SAMPLER_FILTER_NEAREST
+	lut_sampler_state.repeat_u = RenderingDevice.SAMPLER_REPEAT_MODE_REPEAT
+	lut_sampler_state.repeat_v = RenderingDevice.SAMPLER_REPEAT_MODE_REPEAT
+	
+	lut_linear_sampler = rd.sampler_create(lut_sampler_state)
+	
+	var lut_tex_view = RDTextureView.new()
+	
+	lut_tex = rd.texture_create(lut_fmt, lut_tex_view, [lut_table.get_data()])
 	
 	# Compile the compute shader and build pipeline
 	var spirv : RDShaderSPIRV = GLSL_FILE.get_spirv()
@@ -52,16 +81,20 @@ func _render_callback(p_callback_type : int, render_data : RenderData):
 	var y_groups := int((size.y - 1) / 16.0) + 1
 	
 	# LUT
-	if lut_table == null:
-			lut_table = preload("res://LUT/16-8bit.png")
+	
+	var lut_width : float = lut_table.get_width();
+	var lut_height : float = lut_table.get_height();
+	
+	var lut_tex_size : Vector2  = Vector2(lut_width, lut_height);
 	
 	# Pack push constants : [raster_size.x, raster_size.y, polarity, edge_fade]
 	var push_constants := PackedFloat32Array([
 		size.x,
 		size.y,
-		lut_table.get_width(),
-		lut_table.get_height()
+		lut_tex_size.x,
+		lut_tex_size.y
 		])
+	
 	var push_data : PackedByteArray = push_constants.to_byte_array()
 	
 	# Loop over each view (monoscopic = 1 view)
@@ -88,29 +121,7 @@ func _render_callback(p_callback_type : int, render_data : RenderData):
 		
 		# LUT Table
 		## TEST 4 /////////////////////////////////////////////////////////////////////		
-		#var g_img : Image = gradient.get_image()
-		lut_table.convert(Image.FORMAT_RGBAF)
-		#print("Image: ", lut_table)
 		
-		var lut_fmt = RDTextureFormat.new()
-		lut_fmt.width = lut_table.get_width()
-		lut_fmt.height = lut_table.get_height()
-		lut_fmt.format = RenderingDevice.DATA_FORMAT_R32G32B32A32_SFLOAT
-		lut_fmt.usage_bits = RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT | RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT | RenderingDevice.TEXTURE_USAGE_CAN_UPDATE_BIT
-		
-		var lut_sampler_state : RDSamplerState = RDSamplerState.new()
-		lut_sampler_state.min_filter = RenderingDevice.SAMPLER_FILTER_NEAREST
-		lut_sampler_state.mag_filter = RenderingDevice.SAMPLER_FILTER_NEAREST
-		lut_sampler_state.repeat_u = RenderingDevice.SAMPLER_REPEAT_MODE_REPEAT
-		lut_sampler_state.repeat_v = RenderingDevice.SAMPLER_REPEAT_MODE_REPEAT
-		#print("Sampler: ", lut_sampler_state)
-		
-		var lut_linear_sampler : RID = rd.sampler_create(lut_sampler_state)
-		#print("Linear Sampler: ", lut_linear_sampler)
-		
-		var lut_tex_view = RDTextureView.new()
-		
-		var lut_tex = rd.texture_create(lut_fmt, lut_tex_view, [lut_table.get_data()])
 		var lut_sampler_uniform := RDUniform.new()
 		lut_sampler_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE
 		lut_sampler_uniform.binding = 0
