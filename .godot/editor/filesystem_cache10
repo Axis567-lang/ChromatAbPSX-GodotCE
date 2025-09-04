@@ -1,5 +1,5 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1756322797
+::res://::1757009686
 README.md::TextFile/TextFile::-1::1750966414::0::1::::<><><>0<>0<><>::
 ::res://Addons/::1678875640
 ::res://Addons/FreelookCam/::1756178792
@@ -15,9 +15,9 @@ lut_16x1_bright.png::Image/Image::4663822127685042473::1755036370::1756178777::1
 ::res://Materials/::1756178771
 GroundBase.gdshader::Shader/Shader::8302448053188184536::1678875640::0::1::::<><><>0<>0<><>::
 RecoloredBase.gdshader::Shader/Shader::6949931655306402156::1678875640::0::1::::<><><>0<>0<><>::
-::res://Materials/Effects/::1756236876
+::res://Materials/Effects/::1756322808
 LensFlare1.png::CompressedTexture2D/CompressedTexture2D::672242423054959665::1678875640::1756178805::1::::<><><>0<>0<>017a40f575b5888c5f1b901dc437f188<>res://.godot/imported/LensFlare1.png-83336910f5346dcaee2eb0519bcb6b9b.s3tc.ctex::
-LensFlare1.tres::ShaderMaterial/ShaderMaterial::3612539452242460280::1756236876::0::1::::<><><>0<>0<><>::uid://jtvy8cp6phgb::::res://Materials/Effects/LensFlare1.png
+LensFlare1.tres::ShaderMaterial/ShaderMaterial::3612539452242460280::1756322808::0::1::::<><><>0<>0<><>::uid://jtvy8cp6phgb::::res://Materials/Effects/LensFlare1.png
 PointLight.png::CompressedTexture2D/CompressedTexture2D::6963509369231001135::1678875640::1756178805::1::::<><><>0<>0<>d025788004332ef1c3964a042a81a4b6<>res://.godot/imported/PointLight.png-5a4a33119c09502650ec87fc1f972fc5.s3tc.ctex::
 PointLightTransparent.png::CompressedTexture2D/CompressedTexture2D::7274019018961125216::1678875640::1756178805::1::::<><><>0<>0<>963f45bc0bd7923cf88ded4a640004ef<>res://.godot/imported/PointLightTransparent.png-ccfc14a9ce647074404ffb04f54edd6a.s3tc.ctex::
 ::res://Materials/Misc/::1756178818
@@ -50,8 +50,8 @@ forrest_sand_01_nor_gl_1k.png::CompressedTexture2D/CompressedTexture2D::87434034
 OutsideGround.tres::ShaderMaterial/ShaderMaterial::9021288617315967834::1678875640::0::1::::<><><>0<>0<><>::res://Materials/GroundBase.gdshader<>uid://cdwv6dxlm6bt4::::res://Materials/Outside/forest_leaves_03_diff_1k.jpg<>uid://bn0x5hv24mhnk::::res://Materials/Outside/forrest_sand_01_diff_1k.jpg<>uid://bg0rpdse2mp6n::::res://Materials/Outside/forest_leaves_03_disp_1k.png<>uid://cwbnvs35pncj0::::res://Materials/Outside/brown_mud_leaves_01_diff_1k.jpg<>uid://xqngbhpqteux::::res://Materials/Outside/forest_leaves_03_arm_1k.jpg<>uid://b2yfn5flogn85::::res://Materials/Outside/forest_leaves_03_nor_gl_1k.jpg<>uid://ial6q1s71hjq::::res://Materials/Outside/brown_mud_leaves_01_arm_1k.jpg<>uid://mw8pa7mvhk3a::::res://Materials/Outside/forrest_sand_01_disp_1k.png<>uid://bub4rqkvkdy30::::res://Materials/Outside/brown_mud_leaves_01_disp_1k.png<>uid://mpsi1bnseorj::::res://Materials/Outside/forrest_sand_01_nor_gl_1k.png<>uid://dqqbqypyul5b::::res://Materials/Outside/brown_mud_leaves_01_nor_gl_1k.png<>uid://bq2mrara784de::::res://Materials/Outside/forrest_sand_01_arm_1k.jpg
 ::res://Materials/ShaderMaterials/::1755800322
 PSXDither.tres::ShaderMaterial/ShaderMaterial::4874027646949375638::1755800322::0::1::::<><><>0<>0<><>::res://Shaders/postprocess.gdshader<>uid://bbhw8sgom38sw::::res://NoiseTextures/dither_bayer_4x4.png<>uid://djin13bdw7wcm::::res://Palettes/bastille_1x8.tres
-::res://Materials/Sky/::1756236876
-Sky.tres::Sky/Sky::1884637283673481943::1756236876::0::1::::<><><>0<>0<><>::
+::res://Materials/Sky/::1756322808
+Sky.tres::Sky/Sky::1884637283673481943::1756322808::0::1::::<><><>0<>0<><>::
 ::res://Materials/Utrim_Concrete/::1756178862
 utrim_concrete_1_Albedo.png::CompressedTexture2D/CompressedTexture2D::3701431815302619340::1678875640::1756178857::1::::<><><>0<>0<>f58d49c90047f6dd58d3974511f98cb6<>res://.godot/imported/utrim_concrete_1_Albedo.png-595bc3ca0e86502be3f70a0d4c69cb50.bptc.ctex::
 utrim_concrete_1_HeightColorMask.png::CompressedTexture2D/CompressedTexture2D::6294619889201881599::1678875640::1756178861::1::::<><><>0<>0<>3e1f4770f692372a7d3036bc46794e6d<>res://.godot/imported/utrim_concrete_1_HeightColorMask.png-644d0bde0e4f15e494b9c171970ec04c.bptc.ctex::
@@ -176,11 +176,11 @@ Outside_Tree_Low.res::ArrayMesh/ArrayMesh::2141036309024155221::1756178864::0::1
 ::res://NoiseTextures/::1756178792
 dither_bayer_4x4.png::CompressedTexture2D/CompressedTexture2D::2472455831991675998::1746483424::1756178792::1::::<><><>0<>0<>5648311eb00cca600e5a6a4b03dcdf32<>res://.godot/imported/dither_bayer_4x4.png-f1bd37fcd716ed78bda512c4f7a50bcc.ctex::
 noise_flyguy.png::CompressedTexture2D/CompressedTexture2D::8770681431322980065::1751486296::1756178792::1::::<><><>0<>0<>021948bffc3d3d1c9937f69083fc2dd7<>res://.godot/imported/noise_flyguy.png-67422e2f9aba7e7947cfac9ed542b40b.ctex::
-::res://Palettes/::1756236876
-bastille_1x8.tres::GradientTexture1D/GradientTexture1D::7808313889767161512::1756236876::0::1::::<><><>0<>0<><>::
+::res://Palettes/::1756322808
+bastille_1x8.tres::GradientTexture1D/GradientTexture1D::7808313889767161512::1756322808::0::1::::<><><>0<>0<><>::
 sirens_at_night_1x7.tres::GradientTexture1D/GradientTexture1D::1268820771331671016::1749243232::0::1::::<><><>0<>0<><>::
-::res://Scenes/::1756237874
-CompositorEffectHangar.tscn::PackedScene/PackedScene::4042963017837313653::1756237874::0::1::::<><><>0<>0<><>::uid://cmsqjjs56ulbs::::res://Scenes/Controllers/FreeLookCamera.tscn<>uid://d1g71c1xqsdyp::::res://Scenes/Hangar.lmbake<>uid://df3v8ucyursk8::::res://Scenes/Environment/world_environment.tscn<>uid://dklavec8633fs::::res://LUT/16-8bit.png<>uid://ccjmuj0wg0hgi::::res://Scenes/Environment/space_craft_hangar.tscn<>uid://vg8yuihj5huq::::res://Models/Objects/ivy_tall.tscn<>uid://dt48e3j64yyao::::res://Scripts/ComputeShaders/color_quantization_ce.gd<>uid://bcsucihl18y5w::::res://Models/Objects/ivy_wide.tscn<>uid://cbjctyhuj0xmc::::res://Models/Objects/ivy_corner.tscn<>uid://dxdi4u4735wnl::::res://Models/Objects/fern.tscn<>uid://cs4npuq7uy78y::::res://Scenes/Environment/objects.tscn<>uid://8i3ub1lfxbgi::::res://Models/Objects/can.tscn<>uid://x4wqam8k4bq3::::res://Scenes/Environment/dust_particles.tscn<>uid://ddyscklcphe25::::res://Models/Objects/ivy2_shadowcaster.tscn<>uid://dncguvff05q2p::::res://Models/Objects/doorway.tscn<>uid://bvs0ds1autal4::::res://Models/Objects/doorConsole.tscn<>uid://xf5syq4i2ahe::::res://Models/Objects/Arcade.tscn<>uid://bwyjsy0qxpt5j::::res://Models/Objects/ArcadeBroken.tscn<>uid://blkf2n5onfgjs::::res://Models/Objects/hammock.tscn<>uid://cvi0md4h0tigc::::res://Scenes/Environment/lights.tscn
+::res://Scenes/::1756328986
+CompositorEffectHangar.tscn::PackedScene/PackedScene::4042963017837313653::1756328986::0::1::::<><><>0<>0<><>::uid://cmsqjjs56ulbs::::res://Scenes/Controllers/FreeLookCamera.tscn<>uid://d1g71c1xqsdyp::::res://Scenes/Hangar.lmbake<>uid://df3v8ucyursk8::::res://Scenes/Environment/world_environment.tscn<>uid://bsthncb2cmd3s::::res://LUT/lut_8x8_neutral.png<>uid://ccjmuj0wg0hgi::::res://Scenes/Environment/space_craft_hangar.tscn<>uid://vg8yuihj5huq::::res://Models/Objects/ivy_tall.tscn<>uid://dt48e3j64yyao::::res://Scripts/ComputeShaders/color_quantization_ce.gd<>uid://bcsucihl18y5w::::res://Models/Objects/ivy_wide.tscn<>uid://cbjctyhuj0xmc::::res://Models/Objects/ivy_corner.tscn<>uid://dxdi4u4735wnl::::res://Models/Objects/fern.tscn<>uid://cs4npuq7uy78y::::res://Scenes/Environment/objects.tscn<>uid://8i3ub1lfxbgi::::res://Models/Objects/can.tscn<>uid://x4wqam8k4bq3::::res://Scenes/Environment/dust_particles.tscn<>uid://ddyscklcphe25::::res://Models/Objects/ivy2_shadowcaster.tscn<>uid://dncguvff05q2p::::res://Models/Objects/doorway.tscn<>uid://bvs0ds1autal4::::res://Models/Objects/doorConsole.tscn<>uid://xf5syq4i2ahe::::res://Models/Objects/Arcade.tscn<>uid://bwyjsy0qxpt5j::::res://Models/Objects/ArcadeBroken.tscn<>uid://blkf2n5onfgjs::::res://Models/Objects/hammock.tscn<>uid://cvi0md4h0tigc::::res://Scenes/Environment/lights.tscn
 Hangar.exr::CompressedTexture2DArray/CompressedTexture2DArray::8298686509301040757::1678875640::1756178776::1::::<><><>0<>0<>79837f32ab6a2c0fffb919a82160eb19<>res://.godot/imported/Hangar.exr-73f9a65383c761ec44c0c282d7e3c01d.ctexarray::
 Hangar.lmbake::LightmapGIData/LightmapGIData::8998547772881280955::1678875640::0::1::::<><><>0<>0<><>::uid://dqh7fio1ba0nh::::res://Scenes/Hangar.exr
 Hangar.tscn::PackedScene/PackedScene::4265199238740412831::1746656071::0::1::::<><><>0<>0<><>::uid://cmsqjjs56ulbs::::res://Scenes/Controllers/FreeLookCamera.tscn<>uid://df3v8ucyursk8::::res://Scenes/Environment/world_environment.tscn<>uid://d1g71c1xqsdyp::::res://Scenes/Hangar.lmbake<>uid://ccjmuj0wg0hgi::::res://Scenes/Environment/space_craft_hangar.tscn<>uid://vg8yuihj5huq::::res://Models/Objects/ivy_tall.tscn<>uid://bcsucihl18y5w::::res://Models/Objects/ivy_wide.tscn<>uid://cbjctyhuj0xmc::::res://Models/Objects/ivy_corner.tscn<>uid://cs4npuq7uy78y::::res://Scenes/Environment/objects.tscn<>uid://dxdi4u4735wnl::::res://Models/Objects/fern.tscn<>uid://x4wqam8k4bq3::::res://Scenes/Environment/dust_particles.tscn<>uid://ddyscklcphe25::::res://Models/Objects/ivy2_shadowcaster.tscn<>uid://dncguvff05q2p::::res://Models/Objects/doorway.tscn<>uid://bvs0ds1autal4::::res://Models/Objects/doorConsole.tscn<>uid://xf5syq4i2ahe::::res://Models/Objects/Arcade.tscn<>uid://8i3ub1lfxbgi::::res://Models/Objects/can.tscn<>uid://cvi0md4h0tigc::::res://Scenes/Environment/lights.tscn<>uid://bwyjsy0qxpt5j::::res://Models/Objects/ArcadeBroken.tscn<>uid://blkf2n5onfgjs::::res://Models/Objects/hammock.tscn
@@ -210,10 +210,10 @@ Globals.gd::GDScript/GDScript::7171192330961408100::1678875640::0::1::::<>Node3D
 Menu.gd::GDScript/GDScript::3433419739145938375::1678875640::0::1::::<>Control<><>0<>0<><>::
 ReflecttionProbeUpdate.gd::GDScript/GDScript::7451283229590907548::1678875640::0::1::::<>ReflectionProbe<><>0<>0<><>::
 UIDCleanup.gd::GDScript/GDScript::6116035552135500498::1678875640::0::1::::<>EditorScript<><>0<>1<><>::
-::res://Scripts/ComputeShaders/::1756237538
+::res://Scripts/ComputeShaders/::1756327117
 bokeh_ce.gd::GDScript/GDScript::2152150574385490297::1752007198::0::1::::BokehCe<>CompositorEffect<><>0<>1<><>::
 chromatic_aberration_ce.gd::GDScript/GDScript::5937564991223593916::1752007198::0::1::::ChromaticAberrationCe<>CompositorEffect<><>0<>1<><>::
-color_quantization_ce.gd::GDScript/GDScript::8554729325011831582::1756237538::0::1::::ColorQuantizationCe<>CompositorEffect<><>0<>1<><>::
+color_quantization_ce.gd::GDScript/GDScript::8554729325011831582::1756327117::0::1::::ColorQuantizationCe<>CompositorEffect<><>0<>1<><>::
 dither_ce.gd::GDScript/GDScript::5309346924342047722::1752007198::0::1::::DitherCe<>CompositorEffect<><>0<>1<><>::
 downsample_ce.gd::GDScript/GDScript::1618968321085651423::1752007666::0::1::::DownSampleCe<>CompositorEffect<><>0<>1<><>::
 hard_light_ce.gd::GDScript/GDScript::4242643822284832300::1752007198::0::1::::HardLightCe<>CompositorEffect<><>0<>1<><>::
@@ -236,5 +236,5 @@ post_process.glsl::RDShaderFile/RDShaderFile::8250528692296789406::1745535758::1
 post_process_sampler_2d.glsl::RDShaderFile/RDShaderFile::5536834244133418328::1745535758::1756178777::1::::<><><>0<>0<>02b0582ef3c89561452f4321302fff70<>res://.godot/imported/post_process_sampler_2d.glsl-84d7673000b4dadcaa38465c817845e2.res::
 psx.glsl::RDShaderFile/RDShaderFile::7102259989677842050::1751403577::1756178777::1::::<><><>0<>0<>65d9cda4c922f64449d2720c6ab99258<>res://.godot/imported/psx.glsl-9a9697e1a50c39988296bf0ebaec1830.res::
 vignette.glsl::RDShaderFile/RDShaderFile::9221905399279468044::1750796182::1756178777::1::::<><><>0<>0<>5fd67ff8ffcf35784be3049f7c7ea2de<>res://.godot/imported/vignette.glsl-96491fa8510df12c55a52527a9bcf59e.res::
-::res://Shaders/::1756237874
-postprocess.gdshader::Shader/Shader::4869203845937936762::1756237874::0::1::::<><><>0<>0<><>::
+::res://Shaders/::1756333496
+postprocess.gdshader::Shader::4869203845937936762::1756333496::0::1::::<><><>0<>0<><>::
