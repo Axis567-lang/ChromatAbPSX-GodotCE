@@ -126,7 +126,7 @@ func _render_callback(p_callback_type : int, render_data : RenderData):
 		image_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_IMAGE
 		image_uniform.binding = 0
 		image_uniform.add_id(screen_tex)
-
+		
 		# Bind sampler + texture at binding 0
 		var sampler_uniform := RDUniform.new()
 		sampler_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE

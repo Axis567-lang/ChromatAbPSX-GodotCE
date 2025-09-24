@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://d06waea0mhic0"
+path="res://.godot/imported/bayer16tile2.png-8685dc4e3740ea9e743d3c00fa546fab.image"
+
+[deps]
+
+source_file="res://DitherTextures/Bayer/bayer16tile2.png"
+dest_files=["res://.godot/imported/bayer16tile2.png-8685dc4e3740ea9e743d3c00fa546fab.image"]
+
+[params]
+

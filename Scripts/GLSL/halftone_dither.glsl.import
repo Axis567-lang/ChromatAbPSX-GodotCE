@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://b1bkhp3638kvy"
+path="res://.godot/imported/halftone_dither.glsl-dfc3ee6206cb579d97b565a94abd0fbb.res"
+
+[deps]
+
+source_file="res://Scripts/GLSL/halftone_dither.glsl"
+dest_files=["res://.godot/imported/halftone_dither.glsl-dfc3ee6206cb579d97b565a94abd0fbb.res"]
+
+[params]
+

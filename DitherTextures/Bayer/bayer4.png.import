@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://dfkrpv37t3jsg"
+path="res://.godot/imported/bayer4.png-f65a13f41f3e6957e13361a397eb49fd.image"
+
+[deps]
+
+source_file="res://DitherTextures/Bayer/bayer4.png"
+dest_files=["res://.godot/imported/bayer4.png-f65a13f41f3e6957e13361a397eb49fd.image"]
+
+[params]
+
