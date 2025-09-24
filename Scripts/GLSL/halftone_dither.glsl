@@ -28,14 +28,17 @@ mat2 rot(float a) {
                 sin(a),  cos(a));
 }
 
-float halftone_value(float angle, float rad, vec2 uni_cell_size, vec2 uv)
+float halftone_value(float angle, vec2 uni_cell_size, vec2 uv)
 {
     vec2 uv_rot = rot(angle) * uv;
     vec2 d = mod(uv_rot, uni_cell_size) - 0.5 * uni_cell_size;
     float dist = length(d);
+
+    vec3 center_color = texture(screen_sample, uv - d).rgb;
+    float grey = 0.299 * center_color.r + 0.587 * center_color.g + 0.114 * center_color.b;
     // Tomamos el minimo entre ancho y alto, 
     //  para que el radio del punto no sobresalga de la celda si la resolucion no es cuadrada.
-    
+    float rad = grey * min(uni_cell_size.x, uni_cell_size.y) * 0.5;
     return step(dist, rad);
 }
 
@@ -55,7 +58,7 @@ void main()
 	vec2 uv = vec2(pixel) / screen_size;                       // U
 	//	-----------------
 
-    vec3 inCol = texture(screen_sample, uv).rgb;        // col
+    vec3 inCol = texture(screen_sample, uv).rgb;               // col
     
     //  ------------ ORDERED DITHERING ------------  // 
     // float threshold = bayerMatrix[mod(x, N)][mod(y, N)];
@@ -78,17 +81,34 @@ void main()
 
     //  ----------- Halftone Dithering ------------  //
     vec2 uniform_cell_size = vec2(pms.cell_size_px) / screen_size;
-    float grey = 0.299 * inCol.r + 0.587 * inCol.g + 0.114 * inCol.b;
-    float rad = grey * min(uniform_cell_size.x, uniform_cell_size.y) * 0.5;
+    /*
 
     vec3 halftone_color;
     // halftone_value(float angle, float color_element, vec2 uni_cell_size, vec2 uv)
-    halftone_color.r = halftone_value(angleR, rad, uniform_cell_size, uv);
-    halftone_color.g = halftone_value(angleG, rad, uniform_cell_size, uv);
-    halftone_color.b = halftone_value(angleB, rad, uniform_cell_size, uv);
+    halftone_color.r = halftone_value(angleR, uniform_cell_size, uv);
+    halftone_color.g = halftone_value(angleG, uniform_cell_size, uv);
+    halftone_color.b = halftone_value(angleB, uniform_cell_size, uv);
+
+    imageStore(screen_tex, pixel, vec4(halftone_color, 1.0));*/
+    //  ------------------------------------------  //
+
+    //  ----------- Halftone Dithering Grey ------------  //
+    vec2 d = mod(uv, uniform_cell_size) - 0.5 * uniform_cell_size;
+
+    vec3 center_color = texture(screen_sample, uv - d).rgb;
+    float grey = 0.299 * center_color.r + 0.587 * center_color.g + 0.114 * center_color.b;
+
+    // float adj_grey = pow(grey, 0.9); // <1 levanta sombras, >1 aplasta
+
+    float dist = length(d);
+    float scale = 10.;
+
+    // float rad = adj_grey * uniform_cell_size.x * scale;
+    float rad = grey * uniform_cell_size.x * scale;
+
+    vec3 halftone_color = vec3(dist < rad);
 
     imageStore(screen_tex, pixel, vec4(halftone_color, 1.0));
-
 	// imageStore(screen_tex, pixel, vec4(inCol, 1.0));
 }
 
