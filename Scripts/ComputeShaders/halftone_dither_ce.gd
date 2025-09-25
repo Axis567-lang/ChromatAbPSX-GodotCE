@@ -8,7 +8,8 @@ class_name HalftoneDitherCe extends CompositorEffect
 			change_dither(_dither_tex)
 
 # Cell Size in Pixels
-@export_range(2, 10, 1) var cell_size : int = 3
+@export_range(2, 10, 1) var cell_size : int = 5
+@export_range(1, 100, 1) var dot_scale : int = 21
 
 var _dither_tex : Image
 const GLSL_FILE : RDShaderFile = preload("res://Scripts/GLSL/halftone_dither.glsl")
@@ -105,9 +106,10 @@ func _render_callback(p_callback_type : int, render_data : RenderData):
 		size.y,
 		dither_tex_size.x,
 		dither_tex_size.y,
-		float(cell_size)
+		float(cell_size),
+		float(dot_scale)
 		])
-	push_constants.append_array([0.0, 0.0, 0.0]) # -> siempre tamaño final múltiplo de 16
+	push_constants.append_array([0.0, 0.0]) # -> siempre tamaño final múltiplo de 16
 	
 	var push_data : PackedByteArray = push_constants.to_byte_array()
 	

@@ -10,6 +10,7 @@ layout(push_constant, std430) uniform Params {
     vec2 screen_size;
     vec2 dither_tex_size;
     float cell_size_px;
+    float dot_scale;
 } pms;
 
 layout(binding = 1, set = 0) uniform sampler2D screen_sample;
@@ -19,27 +20,68 @@ layout(binding = 0, set = 1) uniform sampler2D dither_sample;
 float dither_N = pms.dither_tex_size.x;
 
 // Rotacion en radianes para cada canal (simula CMY halftone angles)
-const float angleR = 0.0;            // 0 grados
-const float angleG = radians(15.0);  // 15 grados
-const float angleB = radians(75.0);  // 75 grados
+const float angleC = radians(15.0);
+const float angleM = radians(75.0);
+const float angleY = 0.0;
+
+// Rotacion en radianes para cada canal (simula CMY halftone angles)
+const float angleR = 0.0;
+const float angleG = radians(2.0);
+const float angleB = radians(-2.0);
 
 mat2 rot(float a) {
     return mat2(cos(a), -sin(a),
                 sin(a),  cos(a));
 }
 
-float halftone_value(float angle, vec2 uni_cell_size, vec2 uv)
+float halftone_value(float angle, vec2 uni_cell_size, float color_element, vec2 uv)
 {
-    vec2 uv_rot = rot(angle) * uv;
-    vec2 d = mod(uv_rot, uni_cell_size) - 0.5 * uni_cell_size;
+    // vec2 uv_rot = rot(angle) * uv;
+    // vec2 d = mod(uv_rot, uni_cell_size) - 0.5 * uni_cell_size;
+
+    // vec2 d = mod(uv, uni_cell_size) - 0.5 * uni_cell_size;
+
+    // ////////////////////////////////////////////////////////////////////////
+    /*vec2 uv_centered = uv - 0.5 * pms.screen_size; // centrar la rotación
+
+    vec2 uv_rot = rot(angle) * uv_centered;
+    uv_rot += 0.5 * pms.screen_size; // volver a coordenadas originales*/
+
+    // //////////////////////   CELDAS HEX  //////////////////////////////////
+    vec2 cell;
+    cell.x = floor(uv.x / uni_cell_size.x);
+    cell.y = floor(uv.y / (uni_cell_size.y * 0.75)); // vertical spacing con overlap
+
+    // offset horizontal para filas impares
+    float offset = mod(cell.y, 2.0) * 0.5 * uni_cell_size.x;
+
+    // centro de la celda
+    vec2 center = vec2(
+        cell.x *uni_cell_size.x + offset + 0.5 * uni_cell_size.x,
+        cell.y *uni_cell_size.y * 0.75 + 0.5 * uni_cell_size.y
+    );
+
+    vec2 d = uv - center;
+    //  //////////////////////////////////////////////////////////////////
+
     float dist = length(d);
 
-    vec3 center_color = texture(screen_sample, uv - d).rgb;
-    float grey = 0.299 * center_color.r + 0.587 * center_color.g + 0.114 * center_color.b;
+    // vec3 center_color = texture(screen_sample, uv - d).rgb;
+    // float grey = 0.299 * center_color.r + 0.587 * center_color.g + 0.114 * center_color.b;
+
     // Tomamos el minimo entre ancho y alto, 
     //  para que el radio del punto no sobresalga de la celda si la resolucion no es cuadrada.
-    float rad = grey * min(uni_cell_size.x, uni_cell_size.y) * 0.5;
-    return step(dist, rad);
+    float rad = color_element * min(uni_cell_size.x, uni_cell_size.y) * pms.dot_scale;
+
+    // vec2 cell = floor(uv / uni_cell_size);
+
+    float noise = fract(sin(dot(cell, vec2(12.9898,78.233))) * 43758.5453);
+    rad *= mix(0.95, 1.05, noise); // +-5% de variacion, suavemente
+    
+    // return step(dist, rad);
+    //  return smoothstep(rad, rad - 0.5, dist);
+    float edge = 0.2 * rad;
+    return smoothstep(rad, rad - edge, dist);
 }
 
 // MAIN
@@ -81,19 +123,38 @@ void main()
 
     //  ----------- Halftone Dithering ------------  //
     vec2 uniform_cell_size = vec2(pms.cell_size_px) / screen_size;
-    /*
 
-    vec3 halftone_color;
+    /*vec3 halftone_color;
     // halftone_value(float angle, float color_element, vec2 uni_cell_size, vec2 uv)
-    halftone_color.r = halftone_value(angleR, uniform_cell_size, uv);
-    halftone_color.g = halftone_value(angleG, uniform_cell_size, uv);
-    halftone_color.b = halftone_value(angleB, uniform_cell_size, uv);
+    halftone_color.r = halftone_value(angleR, uniform_cell_size, inCol.r, uv);
+    halftone_color.g = halftone_value(angleG, uniform_cell_size, inCol.g, uv);
+    halftone_color.b = halftone_value(angleB, uniform_cell_size, inCol.b, uv);*/
 
-    imageStore(screen_tex, pixel, vec4(halftone_color, 1.0));*/
+    // convertir a CMY
+    /*vec3 cmy = 1.0 - inCol;
+
+    float c = halftone_value(angleC, uniform_cell_size, cmy.r, uv);
+    float m = halftone_value(angleM, uniform_cell_size, cmy.g, uv);
+    float y = halftone_value(angleY, uniform_cell_size, cmy.b, uv);
+    // aka
+    vec3 halftone_color = 1.0 - vec3(c, m, y); // de vuelta a RGB*/
+
+
+    float r_dot = halftone_value(angleR, uniform_cell_size, inCol.r, uv);
+    float g_dot = halftone_value(angleG, uniform_cell_size, inCol.g, uv);
+    float b_dot = halftone_value(angleB, uniform_cell_size, inCol.b, uv);
+
+    vec3 halftone_color = vec3(
+        inCol.r * r_dot,
+        inCol.g * g_dot,
+        inCol.b * b_dot
+    );
+
+    imageStore(screen_tex, pixel, vec4(halftone_color, 1.0));
     //  ------------------------------------------  //
 
     //  ----------- Halftone Dithering Grey ------------  //
-    vec2 d = mod(uv, uniform_cell_size) - 0.5 * uniform_cell_size;
+    /*vec2 d = mod(uv, uniform_cell_size) - 0.5 * uniform_cell_size;
 
     vec3 center_color = texture(screen_sample, uv - d).rgb;
     float grey = 0.299 * center_color.r + 0.587 * center_color.g + 0.114 * center_color.b;
@@ -108,7 +169,10 @@ void main()
 
     vec3 halftone_color = vec3(dist < rad);
 
-    imageStore(screen_tex, pixel, vec4(halftone_color, 1.0));
+    imageStore(screen_tex, pixel, vec4(halftone_color, 1.0));*/
+    //  ----------- ----------------------- ------------  //
+
+
 	// imageStore(screen_tex, pixel, vec4(inCol, 1.0));
 }
 
