@@ -11,6 +11,7 @@ layout(push_constant, std430) uniform Params {
     vec2 dither_tex_size;
     float cell_size_px;
     float dot_scale;
+    float levels;
 } pms;
 
 layout(binding = 1, set = 0) uniform sampler2D screen_sample;
@@ -34,8 +35,7 @@ mat2 rot(float a) {
                 sin(a),  cos(a));
 }
 
-float halftone_value(float angle, vec2 uni_cell_size, float color_element, vec2 uv)
-{
+/*float halftone_value(float angle, vec2 uni_cell_size, float color_element, vec2 uv){
     // vec2 uv_rot = rot(angle) * uv;
     // vec2 d = mod(uv_rot, uni_cell_size) - 0.5 * uni_cell_size;
 
@@ -48,7 +48,8 @@ float halftone_value(float angle, vec2 uni_cell_size, float color_element, vec2 
     uv_rot += 0.5 * pms.screen_size; // volver a coordenadas originales*/
 
     // //////////////////////   CELDAS HEX  //////////////////////////////////
-    vec2 cell;
+    // quitar el comentario /* hehe
+    /*vec2 cell;
     cell.x = floor(uv.x / uni_cell_size.x);
     cell.y = floor(uv.y / (uni_cell_size.y * 0.75)); // vertical spacing con overlap
 
@@ -82,7 +83,9 @@ float halftone_value(float angle, vec2 uni_cell_size, float color_element, vec2 
     //  return smoothstep(rad, rad - 0.5, dist);
     float edge = 0.2 * rad;
     return smoothstep(rad, rad - edge, dist);
-}
+}*/
+
+
 
 // MAIN
 void main()
@@ -101,6 +104,83 @@ void main()
 	//	-----------------
 
     vec3 inCol = texture(screen_sample, uv).rgb;               // col
+
+    //  ---------------------- DITHERING FUSION ----------------------    //
+
+    vec2 uniform_cell_size = vec2(pms.cell_size_px) / screen_size;
+
+    // 1. luminancia
+    float lum = dot(inCol, vec3(0.299, 0.587, 0.114));
+
+    // 2. ordered dithering (Bayer)
+    vec2 dither_uv = vec2(
+        mod(float(pixel.x), float(dither_N)) / float(dither_N),
+        mod(float(pixel.y), float(dither_N)) / float(dither_N)
+    );
+    float threshold = texture(dither_sample, dither_uv).r;
+
+    // 3. cuantización con dithering → nivel discreto
+    float scaled = lum * float(pms.levels);
+    float dithered = floor(scaled + threshold);
+    float level = dithered / float(pms.levels); // [0,1]
+
+    // 4. Halftone: calcular celda y centro
+    //      Celdas Hex ----------------------------------------------------------
+    /*vec2 cell;
+    cell.x = floor(uv.x / uniform_cell_size.x);
+    cell.y = floor(uv.y / (uniform_cell_size.y * 0.75));
+
+    float offset = mod(cell.y, 2.0) * 0.5 * uniform_cell_size.x;
+
+    vec2 center = vec2(
+        cell.x * uniform_cell_size.x + offset + 0.5 * uniform_cell_size.x,
+        cell.y * uniform_cell_size.y * 0.75 + 0.5 * uniform_cell_size.y
+    );
+
+    vec2 d = uv - center;
+    float dist = length(d);*/
+    //      FIN -----------------------------------------------------------------
+
+    //      Celdas Triangulares -------------------------------------------------
+    // Escala a un grid triangular
+    vec2 q = uv / uniform_cell_size;
+
+    // base de coordenadas para triangulos equilateros
+    float s = sqrt(3.0);
+    vec2 basisX = vec2(1.0, 0.0);
+    vec2 basisY = vec2(0.5, s*0.5);
+
+    // Proyectar
+    vec2 tri = vec2(dot(q, basisX), dot(q, basisY));
+
+    // Índices de la celda
+    vec2 cell = floor(tri);
+
+    // Centro de celda en coords originales
+    vec2 center = (cell.x * basisX + cell.y * basisY) * uniform_cell_size;
+
+    vec2 d = uv - center;
+    float dist = length(d);
+    //      FIN -----------------------------------------------------------------
+
+    // 5. radio del dot según nivel discreto
+    float rad = level * min(uniform_cell_size.x, uniform_cell_size.y) * pms.dot_scale;
+
+    // 6. variación suave para romper repetición
+    float noise = fract(sin(dot(cell, vec2(12.9898,78.233))) * 43758.5453);
+    rad *= mix(0.95, 1.05, noise);
+
+    // 7. suavizado del borde del punto
+    float edge = 0.2 * rad;
+    float mask = smoothstep(rad, rad - edge, dist);
+
+    // 8. aplicar al color original
+    vec3 outCol = inCol * mask;
+
+    imageStore(screen_tex, pixel, vec4(outCol, 1.0));
+
+    //  --------------------------------------------------------------    //
+
     
     //  ------------ ORDERED DITHERING ------------  // 
     // float threshold = bayerMatrix[mod(x, N)][mod(y, N)];
@@ -122,15 +202,16 @@ void main()
     //  -------------------------------------------  // 
 
     //  ----------- Halftone Dithering ------------  //
-    vec2 uniform_cell_size = vec2(pms.cell_size_px) / screen_size;
+    //vec2 uniform_cell_size = vec2(pms.cell_size_px) / screen_size;
 
+    //  Color RGB 
     /*vec3 halftone_color;
     // halftone_value(float angle, float color_element, vec2 uni_cell_size, vec2 uv)
     halftone_color.r = halftone_value(angleR, uniform_cell_size, inCol.r, uv);
     halftone_color.g = halftone_value(angleG, uniform_cell_size, inCol.g, uv);
     halftone_color.b = halftone_value(angleB, uniform_cell_size, inCol.b, uv);*/
 
-    // convertir a CMY
+    //  Convertir a CMY
     /*vec3 cmy = 1.0 - inCol;
 
     float c = halftone_value(angleC, uniform_cell_size, cmy.r, uv);
@@ -139,8 +220,8 @@ void main()
     // aka
     vec3 halftone_color = 1.0 - vec3(c, m, y); // de vuelta a RGB*/
 
-
-    float r_dot = halftone_value(angleR, uniform_cell_size, inCol.r, uv);
+    //  RGB pero ahora sí respetando el color
+    /*float r_dot = halftone_value(angleR, uniform_cell_size, inCol.r, uv);
     float g_dot = halftone_value(angleG, uniform_cell_size, inCol.g, uv);
     float b_dot = halftone_value(angleB, uniform_cell_size, inCol.b, uv);
 
@@ -150,7 +231,7 @@ void main()
         inCol.b * b_dot
     );
 
-    imageStore(screen_tex, pixel, vec4(halftone_color, 1.0));
+    imageStore(screen_tex, pixel, vec4(halftone_color, 1.0));*/
     //  ------------------------------------------  //
 
     //  ----------- Halftone Dithering Grey ------------  //
@@ -175,5 +256,4 @@ void main()
 
 	// imageStore(screen_tex, pixel, vec4(inCol, 1.0));
 }
-
 

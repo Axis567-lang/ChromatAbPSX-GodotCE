@@ -7,6 +7,8 @@ class_name DitherCe extends CompositorEffect
 			_dither_tex = value
 			change_dither(_dither_tex)
 
+@export_range(2, 100, 1) var levels : int = 5
+
 var _dither_tex : Image
 const GLSL_FILE : RDShaderFile = preload("res://Scripts/GLSL/dither.glsl")
 
@@ -101,8 +103,10 @@ func _render_callback(p_callback_type : int, render_data : RenderData):
 		size.x,
 		size.y,
 		dither_tex_size.x,
-		dither_tex_size.y
+		dither_tex_size.y,
+		float(levels)
 		])
+	push_constants.append_array([0.0, 0.0, 0.0])
 	
 	var push_data : PackedByteArray = push_constants.to_byte_array()
 	

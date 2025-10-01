@@ -3,4 +3,5 @@ res://Materials/Sky/Sky.tres
 res://Materials/Effects/LensFlare1.tres
 res://Palettes/bastille_1x8.tres
 res://Shaders/postprocess.gdshader
+res://Scripts/ComputeShaders/dither_ce.gd
 res://Scripts/ComputeShaders/halftone_dither_ce.gd

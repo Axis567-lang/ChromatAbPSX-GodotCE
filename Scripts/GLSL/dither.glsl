@@ -9,6 +9,7 @@ layout(rgba16f, binding = 0, set = 0) uniform image2D screen_tex;
 layout(push_constant, std430) uniform Params {
     vec2 screen_size;
     vec2 dither_tex_size;
+    float levels;
 } pms;
 
 layout(binding = 1, set = 0) uniform sampler2D screen_sample;
@@ -33,6 +34,7 @@ void main()
 	vec2 uv = vec2(pixel) / size;
 	//	-----------------
 
+    /*
     vec3 inCol = texture(screen_sample, uv).rgb;
     
     //  ------------ ORDERED DITHERING ------------ // 
@@ -52,7 +54,50 @@ void main()
     imageStore(screen_tex, pixel, vec4(dither_color, 1.0));
 
 
-	// imageStore(screen_tex, pixel, vec4(inCol, 1.0));
+	// imageStore(screen_tex, pixel, vec4(inCol, 1.0));*/
+
+    // Obten el color de entrada
+    vec3 inCol = texture(screen_sample, uv).rgb;
+
+    vec2 dither_uv = vec2(
+            mod(float(pixel.x), float(dither_N)) / float(dither_N),
+            mod(float(pixel.y), float(dither_N)) / float(dither_N)
+        );
+
+    // Obten el umbral de la matriz de Bayer (dither_sample) en un solo canal
+    float threshold = texture(dither_sample, dither_uv).r; // asumiendo que dither_sample es escala de grises
+
+    // Convierte a luminancia (puedes usar otra formula si quieres)
+    float lum = dot(inCol, vec3(0.299, 0.587, 0.114));
+    
+    // Escala la luminancia a niveles discretos con dithering
+    float scaled = lum * float(pms.levels);
+
+    // Aplica el dithering con el umbral
+    float dithered = floor(scaled + threshold);
+
+    // Normaliza de vuelta a [0,1]
+    float outLum = dithered / float(pms.levels);
+
+    float safeLum = max(lum, 1e-6);
+    vec3 outCol = clamp(inCol * (outLum / safeLum), 0.0, 1.0);
+
+    // Reconstruye el color (aquí simplemente escala el color original manteniendo la proporción)
+    //vec3 outCol = inCol * (outLum / lum);
+
+    
+    imageStore(screen_tex, pixel, vec4(outCol, 1.0));
+
+    //  ESCALADO A CADA CANAL
+    /*vec3 scaled = inCol * float(pms.levels);
+
+    vec3 dithered = floor(scaled + threshold);
+
+    vec3 outCol = dithered / float(pms.levels);
+
+
+    imageStore(screen_tex, pixel, vec4(outCol, 1.0));*/
+
 }
 
 
