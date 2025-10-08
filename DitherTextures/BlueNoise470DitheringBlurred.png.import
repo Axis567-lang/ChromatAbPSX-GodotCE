@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://cpvbvh4vcux2i"
+path="res://.godot/imported/BlueNoise470DitheringBlurred.png-e04144d44af4bf3163d09889c0f8ef51.image"
+
+[deps]
+
+source_file="res://DitherTextures/BlueNoise470DitheringBlurred.png"
+dest_files=["res://.godot/imported/BlueNoise470DitheringBlurred.png-e04144d44af4bf3163d09889c0f8ef51.image"]
+
+[params]
+

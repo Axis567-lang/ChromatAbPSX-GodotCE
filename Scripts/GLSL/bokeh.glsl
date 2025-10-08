@@ -11,18 +11,19 @@ layout(push_constant, std430) uniform Params {
     // calculate depth no lineal coords to view coords
     float inv_proj_2w;
     float inv_proj_3w;
+
+	float display_gamma;
+	float golden_angle;
+	float max_blur_size;
+	float rad_scale;
+	float u_far;
+
+	float focus_point;
+	float focus_scale;
+
 } pms;
 
-// ----------------------------------------------------
-#define DISPLAY_GAMMA 1.8
 
-#define GOLDEN_ANGLE 2.39996323
-#define MAX_BLUR_SIZE 20.0
-#define RAD_SCALE 0.1	// Smaller = nicer blur, larger = faster
-#define uFar 10.0	// puedes cambiarlo desde push constants si prefiereS
-// ----------------------------------------------------
-
-// ----------------------------------------------------
 float get_blur_size(float depth, float focus_point, float focus_scale) {
 	// Es el tamaño del área que una fuente puntual (como una estrella) 
 	// proyecta en el sensor o película cuando no está perfectamente 
@@ -36,18 +37,13 @@ float get_blur_size(float depth, float focus_point, float focus_scale) {
 	// coc += noise * 0.01; // o menos
 	//	------------------------------
 
-	return abs(coc) * MAX_BLUR_SIZE;
+	return abs(coc) * pms.max_blur_size;
 }
 // ----------------------------------------------------
 
 // ----------------------------------------------------
 void main()
 {
-	// Define el punto de enfoque (distancia donde la imagen está nítida)
-	float focus_point = 10.0; // 10.0 -> original
-	// Define qué tan fuerte es el desenfoque según la diferencia de enfoque
-	float focus_scale = 20.0; // 50.0
-
 	//	------ UV ------
 	// Convierte la posición global del hilo de cómputo a coordenadas de pixel (x, y)
 	ivec2 pixel = ivec2(gl_GlobalInvocationID.xy);
@@ -70,20 +66,20 @@ void main()
 	float linear_depth = 1. / (depth * pms.inv_proj_2w + pms.inv_proj_3w);
 
 	// Limita la profundidad lineal a un rango válido para evitar errores (0.01 a uFar)
-	linear_depth = clamp(linear_depth, 0.01, uFar);
+	linear_depth = clamp(linear_depth, 0.01, pms.u_far);
 	//	-------------------
 
 	// Calcula el tamaño del desenfoque para este píxel
-	float center_size = get_blur_size(linear_depth, focus_point, focus_scale);
+	float center_size = get_blur_size(linear_depth, pms.focus_point, pms.focus_scale);
 	//	------ ARTIFICIAL SOFTEN ------
 	// Suavizado artificial al CoC para eliminar banding
 	// center_size = smoothstep(0.0, 1.0, center_size); // <- paso clave
-	// center_size *= MAX_BLUR_SIZE;
+	// center_size *= pms.max_blur_size;
 	//	---------------------
 
 	//	------ GRAY ------
 	// Normalizar a rango [0, 1] para visualización (0 cerca, 1 lejos)
-	// float normalized_depth = linear_depth / uFar;
+	// float normalized_depth = linear_depth / pms.u_far;
 
 	// Usar como valor de gris
 	// vec3 color = vec3(normalized_depth);
@@ -99,16 +95,16 @@ void main()
 	vec2 texel_size = 1.0 / size;
 
 	// Inicializa el radio de muestreo para el espiral
-	float radius = RAD_SCALE;
+	float radius = pms.rad_scale;
 
 	// Recorre puntos en espiral mientras el radio sea menor al desenfoque máximo
 	//	------ RANDOM OFFSET ON INITIAL ANGLE ------
 	// float rand = fract(sin(dot(vec2(pixel), vec2(12.9898, 78.233))) * 43758.5453);
 	// float angle0 = rand * 6.2831; // Random start angle [0, 2π]
-	// for (float angle = angle0; radius < MAX_BLUR_SIZE; angle += GOLDEN_ANGLE)
+	// for (float angle = angle0; radius < pms.max_blur_size; angle += pms.golden_angle)
 	//	--------------------------------------------
 
-	for (float angle = 0.0; radius < MAX_BLUR_SIZE; angle += GOLDEN_ANGLE)
+	for (float angle = 0.0; radius < pms.max_blur_size; angle += pms.golden_angle)
 	{
 		// Calcula una posición en espiral usando el ángulo y el radio actual
 		vec2 offset = vec2(cos(angle), sin(angle)) * texel_size * radius;
@@ -129,18 +125,18 @@ void main()
 
 		// Convierte esa profundidad a lineal
 		float sample_linear_depth = 1. / (sample_depth * pms.inv_proj_2w + pms.inv_proj_3w);
-		sample_linear_depth = clamp(sample_linear_depth, 0.01, uFar);
+		sample_linear_depth = clamp(sample_linear_depth, 0.01, pms.u_far);
 
 		//	------ GRAY ------
 		// Normalizar a rango [0, 1] para visualización (0 cerca, 1 lejos)
-		// float sample_normalized_depth = sample_linear_depth / uFar;
+		// float sample_normalized_depth = sample_linear_depth / pms.u_far;
 
 		// Usar como valor de gris
 		// vec3 sample_color = vec3(sample_normalized_depth);
 		//	------------------
 
 		// Calcula el desenfoque de esa muestra
-		float sample_size = get_blur_size(sample_linear_depth, focus_point, focus_scale);
+		float sample_size = get_blur_size(sample_linear_depth, pms.focus_point, pms.focus_scale);
 
 		// Si la muestra está más lejos que el pixel central, limita su desenfoque
 		if (sample_linear_depth > linear_depth)
@@ -161,7 +157,7 @@ void main()
 		tot += 1.0;
 
 		// Aumenta el radio de muestreo (más lento a medida que aumenta)
-		radius += RAD_SCALE / radius;
+		radius += pms.rad_scale / radius;
 		// radius += 0.5; // Más uniforme, menos agresivo
 	}
 
@@ -172,7 +168,7 @@ void main()
 	// color = vec3(1.7, 1.8, 1.9) * color.rgb / (1.0 + color.rgb);
 	// color = color / (vec3(1.0) + color); // Tone mapping tipo Reinhard
 	//inverse gamma correction
-	// color = pow(color, vec3(1.0 / DISPLAY_GAMMA));
+	// color = pow(color, vec3(1.0 / pms.display_gamma));
 	//	---------------------------------------------
 
 	//	------ DITHERING ------

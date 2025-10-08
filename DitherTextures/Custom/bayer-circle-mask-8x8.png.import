@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://b8hrc7ebeesri"
+path="res://.godot/imported/bayer-circle-mask-8x8.png-e452ec26baa89062663ebbefda843eb2.image"
+
+[deps]
+
+source_file="res://DitherTextures/Custom/bayer-circle-mask-8x8.png"
+dest_files=["res://.godot/imported/bayer-circle-mask-8x8.png-e452ec26baa89062663ebbefda843eb2.image"]
+
+[params]
+

@@ -21,7 +21,7 @@ layout(binding = 0, set = 1) uniform sampler2D dither_sample;
 float dither_N = pms.dither_tex_size.x;
 
 // Rotacion en radianes para cada canal (simula CMY halftone angles)
-const float angleC = radians(15.0);
+/*const float angleC = radians(15.0);
 const float angleM = radians(75.0);
 const float angleY = 0.0;
 
@@ -33,7 +33,7 @@ const float angleB = radians(-2.0);
 mat2 rot(float a) {
     return mat2(cos(a), -sin(a),
                 sin(a),  cos(a));
-}
+}*/
 
 /*float halftone_value(float angle, vec2 uni_cell_size, float color_element, vec2 uv){
     // vec2 uv_rot = rot(angle) * uv;
@@ -85,7 +85,19 @@ mat2 rot(float a) {
     return smoothstep(rad, rad - edge, dist);
 }*/
 
+//      ---------------------- NEW FUNCTIONS & VARS ----------------------     //
+const float PI = 3.14159265358979323846;
 
+// --- helpers (grados) ---
+float sind(float a) { return sin(a * PI / 180.0); }
+float cosd(float a) { return cos(a * PI / 180.0); }
+
+// función 'added' adaptada del ejemplo (genera patrón rasterizado)
+float added(vec2 sh, float sa, float ca, vec2 c, float d)
+{
+    return 0.5 + 0.25 * cos((sh.x * sa + sh.y * ca + c.x) * d)
+            + 0.25 * cos((sh.x * ca - sh.y * sa + c.y) * d);
+}
 
 // MAIN
 void main()
@@ -105,9 +117,58 @@ void main()
 
     vec3 inCol = texture(screen_sample, uv).rgb;               // col
 
+    //  ---------------------- NEW HALFTONE IDEA ---------------------    //
+    // umbral (puedes exponerlo como uniform)
+    float threshold = 0.75; // 0.75
+
+    // relación de aspecto usando tu screen_size
+    float ratio = screen_size.y / screen_size.x;
+
+    // coords normalizados [0,1]
+    vec2 dstCoord = vec2(uv.x, uv.y);
+    vec2 srcCoord = vec2(uv.x, uv.y / ratio);
+
+    vec2 rotationCenter = vec2(0.5, 0.5);
+    vec2 shift = dstCoord - rotationCenter;
+
+    // tamaño del punto → aquí puedes mapear con tu parámetro
+    float dotSize = pms.dot_scale; 
+
+    // ángulo de rotación
+    float angle = 30.0;
+
+    // patrón raster por canal
+    vec3 rasterPattern = vec3(
+        added(shift, sind(angle + 0.0), cosd(angle), rotationCenter, PI / dotSize * 680.0),
+        added(shift, sind(angle + 30.0), cosd(angle), rotationCenter, PI / dotSize * 680.0),
+        added(shift, sind(angle + 60.0), cosd(angle), rotationCenter, PI / dotSize * 680.0)
+    );
+
+    // color original desde tu sampler
+    vec3 srcPixel = inCol;
+
+    // fórmula original de Shadertoy
+    vec3 halftone = vec3(
+        (rasterPattern.r * threshold + srcPixel.r - threshold) / (1.0 - threshold),
+        (rasterPattern.g * threshold + srcPixel.g - threshold) / (1.0 - threshold),
+        (rasterPattern.b * threshold + srcPixel.b - threshold) / (1.0 - threshold)
+    );
+
+    halftone = clamp(halftone, 0.0, 1.0);
+
+    // salida final
+    imageStore(screen_tex, pixel, vec4(halftone, 1.0));
+
+    // vec3 out_color = inCol * halftone;
+
+    // // salida final
+    // imageStore(screen_tex, pixel, vec4(out_color, 1.0));
+
+    //  ----------------------------- END ----------------------------    //
+
     //  ---------------------- DITHERING FUSION ----------------------    //
 
-    vec2 uniform_cell_size = vec2(pms.cell_size_px) / screen_size;
+    /*vec2 uniform_cell_size = vec2(pms.cell_size_px) / screen_size;
 
     // 1. luminancia
     float lum = dot(inCol, vec3(0.299, 0.587, 0.114));
@@ -138,7 +199,7 @@ void main()
     );
 
     vec2 d = uv - center;
-    float dist = length(d);*/
+    float dist = length(d);
     //      FIN -----------------------------------------------------------------
 
     //      Celdas Triangulares -------------------------------------------------
@@ -177,7 +238,7 @@ void main()
     // 8. aplicar al color original
     vec3 outCol = inCol * mask;
 
-    imageStore(screen_tex, pixel, vec4(outCol, 1.0));
+    imageStore(screen_tex, pixel, vec4(outCol, 1.0));*/
 
     //  --------------------------------------------------------------    //
 

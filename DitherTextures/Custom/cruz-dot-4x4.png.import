@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://dr564o5swej5e"
+path="res://.godot/imported/cruz-dot-4x4.png-544a29e5593a1462a4807ce2aee34ac3.image"
+
+[deps]
+
+source_file="res://DitherTextures/Custom/cruz-dot-4x4.png"
+dest_files=["res://.godot/imported/cruz-dot-4x4.png-544a29e5593a1462a4807ce2aee34ac3.image"]
+
+[params]
+

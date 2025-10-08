@@ -9,7 +9,7 @@ class_name HalftoneDitherCe extends CompositorEffect
 
 # Cell Size in Pixels
 @export_range(2, 100, 1) var cell_size : int = 2
-@export_range(1, 100, 1) var dot_scale : int = 51
+@export_range(1, 100, 1) var dot_scale : int = 3
 @export_range(2, 100, 1) var levels : int = 25
 
 var _dither_tex : Image

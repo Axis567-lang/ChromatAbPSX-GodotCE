@@ -8,15 +8,26 @@ layout(rgba16f, binding = 0, set = 0) uniform image2D screen_tex;
 
 layout(push_constant, std430) uniform Params {
     vec2 screen_size;
-    vec2 dither_tex_size;
+
+    vec2 dither_tex_size_1;
+    vec2 dither_tex_size_2;
+    vec2 dither_tex_size_3;
+
     float levels;
+
+    float inv_proj_2w;
+    float inv_proj_3w;
 } pms;
 
 layout(binding = 1, set = 0) uniform sampler2D screen_sample;
 
-layout(binding = 0, set = 1) uniform sampler2D dither_sample;
+layout(binding = 0, set = 1) uniform sampler2D dither_sample_1;
+layout(binding = 1, set = 1) uniform sampler2D dither_sample_2;
+layout(binding = 2, set = 1) uniform sampler2D dither_sample_3;
 
-float dither_N = pms.dither_tex_size.x;
+layout(binding = 0, set = 2) uniform sampler2D depth_tex;
+
+float dither_N = pms.dither_tex_size_1.x;
 
 // MAIN
 void main()
@@ -47,7 +58,7 @@ void main()
             mod(float(pixel.y), float(dither_N)) / float(dither_N)
         );
 
-    vec3 threshold = texture(dither_sample, dither_uv).rgb;
+    vec3 threshold = texture(dither_sample_1, dither_uv).rgb;
     
     vec3 dither_color = step(threshold, inCol);
 
@@ -59,16 +70,28 @@ void main()
     // Obten el color de entrada
     vec3 inCol = texture(screen_sample, uv).rgb;
 
+    // Depth
+    float depth = texture(depth_tex, uv).r;
+    float linear_depth = 1. / (depth * pms.inv_proj_2w + pms.inv_proj_3w);
+    linear_depth = clamp(linear_depth / 50., 0., 1.);
+    // --------- END
+
     vec2 dither_uv = vec2(
             mod(float(pixel.x), float(dither_N)) / float(dither_N),
             mod(float(pixel.y), float(dither_N)) / float(dither_N)
         );
 
-    // Obten el umbral de la matriz de Bayer (dither_sample) en un solo canal
-    float threshold = texture(dither_sample, dither_uv).r; // asumiendo que dither_sample es escala de grises
+    // Obten el umbral de la matriz de Bayer (dither_sample_1) en un solo canal
+    float threshold;
+    if (linear_depth < 0.1)
+        threshold = texture(dither_sample_1, dither_uv).r;
+    else if (linear_depth < 0.4)
+        threshold = texture(dither_sample_2, dither_uv).r;
+    else
+        threshold = texture(dither_sample_3, dither_uv).r;
 
     // Convierte a luminancia (puedes usar otra formula si quieres)
-    float lum = dot(inCol, vec3(0.299, 0.587, 0.114));
+    /*float lum = dot(inCol, vec3(0.299, 0.587, 0.114));
     
     // Escala la luminancia a niveles discretos con dithering
     float scaled = lum * float(pms.levels);
@@ -86,17 +109,17 @@ void main()
     //vec3 outCol = inCol * (outLum / lum);
 
     
-    imageStore(screen_tex, pixel, vec4(outCol, 1.0));
+    imageStore(screen_tex, pixel, vec4(outCol, 1.0));*/
 
     //  ESCALADO A CADA CANAL
-    /*vec3 scaled = inCol * float(pms.levels);
+    vec3 scaled = inCol * float(pms.levels);
 
     vec3 dithered = floor(scaled + threshold);
 
     vec3 outCol = dithered / float(pms.levels);
 
 
-    imageStore(screen_tex, pixel, vec4(outCol, 1.0));*/
+    imageStore(screen_tex, pixel, vec4(outCol, 1.0));
 
 }
 

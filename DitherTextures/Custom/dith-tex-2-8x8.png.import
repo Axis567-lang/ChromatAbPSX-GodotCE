@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://ls28tknku83p"
+path="res://.godot/imported/dith-tex-2-8x8.png-6669ba3eeb2b7f9fcf55590ac6c7c35f.image"
+
+[deps]
+
+source_file="res://DitherTextures/Custom/dith-tex-2-8x8.png"
+dest_files=["res://.godot/imported/dith-tex-2-8x8.png-6669ba3eeb2b7f9fcf55590ac6c7c35f.image"]
+
+[params]
+

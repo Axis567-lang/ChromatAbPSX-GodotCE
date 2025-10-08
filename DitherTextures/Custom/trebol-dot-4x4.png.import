@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://ce5h85fpkm860"
+path="res://.godot/imported/trebol-dot-4x4.png-0ebda007cc2709987ab150745df61cde.image"
+
+[deps]
+
+source_file="res://DitherTextures/Custom/trebol-dot-4x4.png"
+dest_files=["res://.godot/imported/trebol-dot-4x4.png-0ebda007cc2709987ab150745df61cde.image"]
+
+[params]
+

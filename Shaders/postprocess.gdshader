@@ -116,7 +116,7 @@ void fragment() {
 	vec3 col_vig = mix(col_nos, vignette_rgba.rgb * v, vignette_rgba.a * v);
 
 	COLOR.rgb = col_vig;
-	
+
 	//vec3 color = vec3(0.5);
 	//vec3 tex_color = texture(TEXTURE, UV).rgb;
 //
