@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://7hi2nliw286u"
+path="res://.godot/imported/random.png-2ef3218a889bd9898c5db0f4dd7cbfdc.image"
+
+[deps]
+
+source_file="res://DitherTextures/Custom/Bayer4x4/random.png"
+dest_files=["res://.godot/imported/random.png-2ef3218a889bd9898c5db0f4dd7cbfdc.image"]
+
+[params]
+

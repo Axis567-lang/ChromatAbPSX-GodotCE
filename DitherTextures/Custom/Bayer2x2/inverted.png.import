@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://ctl6kctuajd10"
+path="res://.godot/imported/inverted.png-726138e057e973f194adce318653d3af.image"
+
+[deps]
+
+source_file="res://DitherTextures/Custom/Bayer2x2/inverted.png"
+dest_files=["res://.godot/imported/inverted.png-726138e057e973f194adce318653d3af.image"]
+
+[params]
+

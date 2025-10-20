@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://d3aqpb46qw7gg"
+path="res://.godot/imported/dither_multipattern.glsl-b86a8d60a38a8aa3c27a380df12c1737.res"
+
+[deps]
+
+source_file="res://Scripts/GLSL/dither_multipattern.glsl"
+dest_files=["res://.godot/imported/dither_multipattern.glsl-b86a8d60a38a8aa3c27a380df12c1737.res"]
+
+[params]
+

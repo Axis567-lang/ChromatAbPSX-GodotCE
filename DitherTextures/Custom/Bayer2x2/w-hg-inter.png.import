@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://0tdv10sy5why"
+path="res://.godot/imported/w-hg-inter.png-3670708915adb99f101349f198199497.image"
+
+[deps]
+
+source_file="res://DitherTextures/Custom/Bayer2x2/w-hg-inter.png"
+dest_files=["res://.godot/imported/w-hg-inter.png-3670708915adb99f101349f198199497.image"]
+
+[params]
+

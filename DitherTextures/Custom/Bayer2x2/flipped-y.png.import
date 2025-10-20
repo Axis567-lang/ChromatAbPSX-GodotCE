@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://b83p048nx1uij"
+path="res://.godot/imported/flipped-y.png-2539dae20470041102a5d3624f5493fd.image"
+
+[deps]
+
+source_file="res://DitherTextures/Custom/Bayer2x2/flipped-y.png"
+dest_files=["res://.godot/imported/flipped-y.png-2539dae20470041102a5d3624f5493fd.image"]
+
+[params]
+

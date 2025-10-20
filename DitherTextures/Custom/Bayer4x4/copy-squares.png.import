@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://smuw15jj2lg1"
+path="res://.godot/imported/copy-squares.png-68db8cbd46409f8f7cafcf2f74342649.image"
+
+[deps]
+
+source_file="res://DitherTextures/Custom/Bayer4x4/copy-squares.png"
+dest_files=["res://.godot/imported/copy-squares.png-68db8cbd46409f8f7cafcf2f74342649.image"]
+
+[params]
+
