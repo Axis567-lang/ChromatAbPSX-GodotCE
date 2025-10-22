@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://bcbmq0vlkkw7r"
+path="res://.godot/imported/copy-gradient-square.png-20589da2cd9f253ba0ee0fd0ba403ea8.image"
+
+[deps]
+
+source_file="res://DitherTextures/Custom/Bayer8x8/copy-gradient-square.png"
+dest_files=["res://.godot/imported/copy-gradient-square.png-20589da2cd9f253ba0ee0fd0ba403ea8.image"]
+
+[params]
+

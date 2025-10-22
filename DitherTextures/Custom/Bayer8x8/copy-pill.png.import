@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://bdvu5df0hdsgw"
+path="res://.godot/imported/copy-pill.png-fa91cec23a415b40f13ced4231795e7b.image"
+
+[deps]
+
+source_file="res://DitherTextures/Custom/Bayer8x8/copy-pill.png"
+dest_files=["res://.godot/imported/copy-pill.png-fa91cec23a415b40f13ced4231795e7b.image"]
+
+[params]
+
